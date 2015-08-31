@@ -35,6 +35,11 @@
           WSGIScriptAlias / /var/www/django-site/site/project/wsgi.py
     django_site_root: /var/www/django-site
     django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
+    django_database_db: django
+    django_database_username: django
+
+  vars_files:
+    - encrypted_vars/apache.yml
 
   roles:
     - { role: django-site }
