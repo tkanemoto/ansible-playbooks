@@ -1,0 +1,26 @@
+---
+# Create PostgreSQL database for the django site
+
+- name: Create Django PostgreSQL database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: >
+    name={{ django_database_db }}
+    encoding='UTF-8'
+    state=present
+  tags:
+    - django
+    - postgresql
+
+- name: Create Gerrit PostgreSQL database user
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: >
+    name={{ django_database_username }}
+    db={{ django_database_db }}
+    password={{ django_database_password }}
+    priv=ALL
+    state=present
+  tags:
+    - django
+    - postgresql

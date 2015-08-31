@@ -1,12 +1,19 @@
 ---
 - name: Ensure django-site directory exists
-  file: path={{ django_site_root }} state=directory
+  file: path={{ django_site_root | mandatory }} state=directory
 
 - name: Repo-init the django manifest
-  command: repo init -u {{ django_site_manifest_url }}
+  command: repo init -u {{ django_site_manifest_url | mandatory }}
     creates={{ django_site_root }}/.repo/manifest.xml
     chdir={{ django_site_root }}
 
 - name: Repo-sync the latest source tree
   command: repo sync
     chdir={{ django_site_root }}
+
+- name: Ensure dependencies are installed.
+  apt: pkg=make state=installed
+
+- name: Prepare database schema
+  command: make prepare-db
+    chdir={{ django_site_root }}/site
