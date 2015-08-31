@@ -1,0 +1,11 @@
+from __future__ import absolute_import
+from .settings import *
+
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': '{{ django_database_db }}',
+    'USER': '{{ django_database_username }}',
+    'HOST': 'localhost',
+    'PORT': '5432',
+    'PASSWORD': '{{ django_database_password }}',
+}
