@@ -35,6 +35,8 @@
 - name: Ensure dependencies are installed.
   apt: pkg=make state=installed
 
+- include: postgresql.yml
+
 - name: Prepare database schema
   command: make prepare-db
     chdir={{ django_site_root }}/site
