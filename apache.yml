@@ -25,6 +25,22 @@
           ProxyPass /ci http://127.0.0.1:8080/ci nocanon
           ProxyPassReverse /ci http://localhost:8080/ci
           Alias /static/ /var/www/django-site/static/
+          <Directory "/var/www/django-site/static">
+            AllowOverride All
+            Options +Indexes +FollowSymLinks
+            Require all granted
+          </Directory>
+          Alias /share/ /var/www/share/
+          <Directory "/var/www/share/">
+            AllowOverride All
+            Options +Indexes +FollowSymLinks
+            Allow from all
+            AuthName "Restricted Area"
+            AuthType Basic
+            AuthBasicProvider file
+            AuthUserFile "/var/www/share/.htpasswd"
+            Require valid-user
+          </Directory>
           WSGIDaemonProcess django \
             user=django \
             group=django \
@@ -34,11 +50,6 @@
             python-path=/var/www/django-site/site:/var/www/django-site/.virtualenv/lib/python2.7/site-packages
           WSGIProcessGroup django
           WSGIScriptAlias / /var/www/django-site/site/project/wsgi.py
-          <Directory "/var/www/django-site/static">
-            AllowOverride All
-            Options +Indexes +FollowSymLinks
-            Require all granted
-          </Directory>
     django_site_root: /var/www/django-site
     django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
     django_database_db: django
