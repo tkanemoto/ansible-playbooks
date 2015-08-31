@@ -37,6 +37,14 @@
 
 - include: postgresql.yml
 
+- name: Generate settings_local.py
+  template: >
+    src=django/settings_local.py.j2
+    dest={{ django_site_root }}/site/project/settings_local.py
+    owner=django
+    group=django
+    mode=0600
+
 - name: Prepare database schema
   command: make prepare-db
     chdir={{ django_site_root }}/site
