@@ -1,6 +1,27 @@
 ---
+- name: Create django group
+  group:
+    name=django
+    system=yes
+    state=present
+
+- name: Create django user
+  user:
+    name=django
+    append=yes
+    group=django
+    home={{ django_site_root }}
+    shell=/bin/bash
+    system=yes
+    state=present
+
 - name: Ensure django-site directory exists
-  file: path={{ django_site_root | mandatory }} state=directory
+  file:
+    path={{ django_site_root | mandatory }}
+    state=directory
+    owner=django
+    group=django
+    mode=02775
 
 - name: Repo-init the django manifest
   command: repo init -u {{ django_site_manifest_url | mandatory }}
