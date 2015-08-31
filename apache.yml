@@ -1,0 +1,27 @@
+---
+- hosts: apache
+  user: ubuntu
+  sudo: yes
+  vars:
+    apache_listen_port: 80
+    apache_remove_default_vhost: true
+    apache_mods_enabled:
+      - rewrite.load
+      - proxy.load
+      - proxy_http.load
+    apache_vhosts:
+      - servername: "tkanemoto.ddns.net"
+        documentroot: "/var/www/vhosts/tkanemoto.ddns.net"
+        extra_parameters: |
+          AllowEncodedSlashes NoDecode
+          RewriteEngine on
+          ProxyPass /review http://127.0.0.1:8081/review nocanon
+          ProxyPassReverse /review http://localhost:8081/review
+          ProxyPass /ci http://127.0.0.1:8080/ci nocanon
+          ProxyPassReverse /ci http://localhost:8080/ci
+    django_site_root: /var/www/django-site
+    django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
+
+  roles:
+    - { role: geerlingguy.apache }
+    - { role: django-site }

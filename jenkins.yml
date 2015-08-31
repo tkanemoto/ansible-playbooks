@@ -1,0 +1,6 @@
+---
+- hosts: jenkins
+  user: ubuntu
+  sudo: yes
+  roles:
+    - { role: geerlingguy.jenkins, jenkins_url_prefix: '/ci' }

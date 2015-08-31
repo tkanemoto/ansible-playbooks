@@ -1,0 +1,8 @@
+[gerrit]
+ec2-52-88-0-88.us-west-2.compute.amazonaws.com
+
+[jenkins]
+ec2-52-88-0-88.us-west-2.compute.amazonaws.com
+
+[apache]
+ec2-52-88-0-88.us-west-2.compute.amazonaws.com
