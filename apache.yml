@@ -32,17 +32,7 @@
             Options +Indexes +FollowSymLinks
             Require all granted
           </Directory>
-          Alias /share/ /var/www/share/
-          <Directory "/var/www/share/">
-            AllowOverride All
-            Options +Indexes +FollowSymLinks
-            Allow from all
-            AuthName "Restricted Area"
-            AuthType Basic
-            AuthBasicProvider file
-            AuthUserFile "/var/www/share/.htpasswd"
-            Require valid-user
-          </Directory>
+          Alias /media/ /var/www/django-site/static/media/
           WSGIDaemonProcess django \
             user=django \
             group=django \

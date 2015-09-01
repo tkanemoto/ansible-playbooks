@@ -23,6 +23,13 @@
     group=django
     mode=02775
 
+- name: Link media dir
+  file:
+    src=static/media
+    dest={{ django_site_root | mandatory }}/media
+    force=yes
+    state=link
+
 - name: Repo-init the django manifest
   command: repo init -u {{ django_site_manifest_url | mandatory }}
     creates={{ django_site_root }}/.repo/manifest.xml
