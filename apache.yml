@@ -24,6 +24,8 @@
           ProxyPassReverse /review http://localhost:8081/review
           ProxyPass /ci http://127.0.0.1:8080/ci nocanon
           ProxyPassReverse /ci http://localhost:8080/ci
+          ProxyPass /transmission/ http://127.0.0.1:29091/transmission nocanon
+          ProxyPassReverse /transmission http://localhost:29091/transmission
           Alias /static/ /var/www/django-site/static/
           <Directory "/var/www/django-site/static">
             AllowOverride All
