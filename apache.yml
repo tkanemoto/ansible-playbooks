@@ -33,6 +33,8 @@
             Require all granted
           </Directory>
           Alias /media/ /var/www/django-site/static/media/
+          ProxyPass /share/ http://127.0.0.1:28003/share/
+          ProxyPassReverse /share/ http://localhost:28003/share/
           WSGIDaemonProcess django \
             user=django \
             group=django \
