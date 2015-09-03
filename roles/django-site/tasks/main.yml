@@ -23,6 +23,23 @@
     group=django
     mode=02775
 
+- name: Ensure django-site htdocs directory exists
+  file:
+    path={{ django_site_root }}/htdocs
+    state=directory
+    owner=django
+    group=django
+    mode=02775
+
+- name: Generate Google site verification file
+  copy:
+    dest: '{{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html'
+    content: 'google-site-verification: google{{ google_site_verification_code }}.html'
+    owner: django
+    group: django
+    mode: 0644
+  when: google_site_verification_code is defined
+
 - name: Link media dir
   file:
     src=static/media

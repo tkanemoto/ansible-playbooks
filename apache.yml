@@ -2,6 +2,10 @@
 - hosts: apache
   user: ubuntu
   sudo: yes
+
+  vars_files:
+    - encrypted_vars/apache.yml
+
   vars:
     apache_listen_port: 80
     apache_remove_default_vhost: true
@@ -19,22 +23,6 @@
         documentroot: "/var/www/django-site/htdocs"
         extra_parameters: |
           AllowEncodedSlashes NoDecode
-          RewriteEngine on
-          ProxyPass /review http://127.0.0.1:8081/review nocanon
-          ProxyPassReverse /review http://localhost:8081/review
-          ProxyPass /ci http://127.0.0.1:8080/ci nocanon
-          ProxyPassReverse /ci http://localhost:8080/ci
-          ProxyPass /transmission/ http://127.0.0.1:29091/transmission nocanon
-          ProxyPassReverse /transmission http://localhost:29091/transmission
-          Alias /static/ /var/www/django-site/static/
-          <Directory "/var/www/django-site/static">
-            AllowOverride All
-            Options +Indexes +FollowSymLinks
-            Require all granted
-          </Directory>
-          Alias /media/ /var/www/django-site/static/media/
-          ProxyPass /share/ http://127.0.0.1:28003/share/
-          ProxyPassReverse /share/ http://localhost:28003/share/
           WSGIDaemonProcess django \
             user=django \
             group=django \
@@ -44,13 +32,11 @@
             python-path=/var/www/django-site/site:/var/www/django-site/.virtualenv/lib/python2.7/site-packages
           WSGIProcessGroup django
           WSGIScriptAlias / /var/www/django-site/site/project/wsgi.py
+          {{ apache_extra_parameters | mandatory }}
     django_site_root: /var/www/django-site
     django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
     django_database_db: django
     django_database_username: django
-
-  vars_files:
-    - encrypted_vars/apache.yml
 
   roles:
     - { role: django-site }
