@@ -8,5 +8,6 @@
       - git
       - ssh
       - ec2
+      - mask-passwords
   roles:
     - geerlingguy.jenkins
