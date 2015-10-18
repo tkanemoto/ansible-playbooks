@@ -2,5 +2,11 @@
 - hosts: jenkins
   user: ubuntu
   sudo: yes
+  vars:
+    jenkins_url_prefix: '/ci'
+    jenkins_plugins:
+      - git
+      - ssh
+      - ec2
   roles:
-    - { role: geerlingguy.jenkins, jenkins_url_prefix: '/ci' }
+    - geerlingguy.jenkins
