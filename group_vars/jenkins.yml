@@ -1,0 +1,7 @@
+---
+jenkins_url_prefix: '/ci'
+jenkins_plugins:
+  - git
+  - ssh
+  - ec2
+  - mask-passwords
