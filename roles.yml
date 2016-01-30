@@ -1,4 +1,4 @@
-- src: https://github.com/kbrebanov/ansible-gerrit.git
+- src: https://github.com/tkanemoto/ansible-gerrit.git
   name: kbrebanov.gerrit
 - src: geerlingguy.apache
 - src: https://github.com/tkanemoto/ansible-role-jenkins.git
