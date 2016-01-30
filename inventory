@@ -1,8 +1,8 @@
 [gerrit]
-ec2-52-89-132-82.us-west-2.compute.amazonaws.com
+ec2-52-26-131-8.us-west-2.compute.amazonaws.com
 
 [jenkins]
-ec2-52-89-132-82.us-west-2.compute.amazonaws.com
+ec2-52-26-131-8.us-west-2.compute.amazonaws.com
 
 [apache]
-ec2-52-89-132-82.us-west-2.compute.amazonaws.com
+ec2-52-26-131-8.us-west-2.compute.amazonaws.com
