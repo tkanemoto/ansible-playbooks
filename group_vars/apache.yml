@@ -18,8 +18,8 @@ apache_vhosts:
       WSGIDaemonProcess django \
         user=django \
         group=django \
-        processes=4 \
-        threads=15 \
+        processes=2 \
+        threads=2 \
         display-name=%{GROUP} \
         python-path=/var/www/django-site/site:/var/www/django-site/.virtualenv/lib/python2.7/site-packages
       WSGIProcessGroup django

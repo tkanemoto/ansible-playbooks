@@ -1,6 +1,7 @@
 ---
-gerrit_version: '2.12'
-gerrit_sha256sum: '8f2e2e61b939664a20a025ef4f99095c08be14342ea5457bf5613bccedabcd27'
+gerrit_version: '2.12-56-gf1952c6'
+gerrit_sha256sum: '7b4cf6202626e83f00f7bacec3579fa117e13f01b49812de92486e7411bec192'
+gerrit_download_server: 'http://tkanemoto.ddns.net/static/public'
 gerrit_canonical_web_url: 'http://tkanemoto.ddns.net/review/'
 gerrit_httpd_listen_url: "proxy-http://*:8081/review/"
 gerrit_database_type: 'postgresql'

@@ -1,8 +1,8 @@
 [gerrit]
-ec2-52-26-131-8.us-west-2.compute.amazonaws.com
+tkanemoto.ddns.net
 
 [jenkins]
-ec2-52-26-131-8.us-west-2.compute.amazonaws.com
+tkanemoto.ddns.net
 
 [apache]
-ec2-52-26-131-8.us-west-2.compute.amazonaws.com
+tkanemoto.ddns.net
