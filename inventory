@@ -1,8 +1,8 @@
 [gerrit]
-tkanemoto.ddns.net
+tk-server.ddns.net
 
 [jenkins]
-tkanemoto.ddns.net
+tk-server.ddns.net
 
 [apache]
-tkanemoto.ddns.net
+tk-server.ddns.net
