@@ -1,7 +1,6 @@
 ---
 - hosts: apache
-  user: ubuntu
-  sudo: yes
+  become: yes
 
   vars_files:
     - encrypted_vars/apache.yml

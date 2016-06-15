@@ -1,0 +1,4 @@
+---
+certificate_file: '{{ site_root }}/cert.pem'
+certificate_key_file: '{{ site_root }}/privkey.pem'
+

@@ -1,7 +1,6 @@
 ---
 - hosts: gerrit
-  user: ubuntu
-  sudo: yes
+  become: yes
 
   vars_files:
     - encrypted_vars/gerrit.yml

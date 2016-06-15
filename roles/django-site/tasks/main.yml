@@ -1,4 +1,10 @@
 ---
+- name: Ensure django-site directory exists
+  file:
+    path={{ django_site_root | mandatory }}
+    state=directory
+    recurse=yes
+
 - name: Create django group
   group:
     name=django
@@ -15,7 +21,7 @@
     system=yes
     state=present
 
-- name: Ensure django-site directory exists
+- name: Set django-site directory mode
   file:
     path={{ django_site_root | mandatory }}
     state=directory
@@ -57,7 +63,12 @@
     chdir={{ django_site_root }}
 
 - name: Ensure dependencies are installed.
-  apt: pkg=make state=installed
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - make
+    - python-pip
+    - libjpeg-dev
+    - python-letsencrypt-apache
 
 - include: postgresql.yml
 

@@ -5,3 +5,4 @@ jenkins_plugins:
   - ssh
   - ec2
   - mask-passwords
+  - description-setter
