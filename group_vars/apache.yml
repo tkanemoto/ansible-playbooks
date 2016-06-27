@@ -1,5 +1,12 @@
 ---
-site_root: "/var/www/django-site"
+hostname: tkanemoto.com
+hostname_short: '{{ hostname | regex_replace("\..*$", "") }}'
+
+django_site_root: /var/www/django-site
+django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
+django_database_db: django
+django_database_username: django
+
 apache_remove_default_vhost: true
 apache_vhosts_filename: '000-vhosts.conf'
 apache_mods_enabled:
@@ -12,35 +19,92 @@ apache_packages:
   - apache2
   - apache2-utils
   - libapache2-mod-wsgi
+
+apache_global_vhost_settings: |
+  DirectoryIndex index.php index.html
+  LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %D %B" {{ hostname_short }}_access
+  LogLevel warn
+  ErrorLog /var/log/apache2/{{ hostname }}_error.log
+  CustomLog /var/log/apache2/{{ hostname }}_access.log {{ hostname_short }}_access
+
 apache_vhosts:
-  - servername: "tkanemoto.ddns.net"
-    documentroot: '{{ site_root }}/htdocs'
-    certificate_file: '{{ certificate_file }}'
-    certificate_key_file: '{{ certificate_key_file }}'
+  - servername: '{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
     extra_parameters: |
-      AllowEncodedSlashes NoDecode
+      RewriteEngine on
+      RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
+      RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
+      RewriteRule ^/?(.*)$ https://%{SERVER_NAME}/$1 [R=301,L]
+
+  - servername: 'tkanemoto-review.ddns.net'
+    documentroot: '{{ django_site_root }}/htdocs'
+    extra_parameters: |
+      RewriteEngine on
+      RewriteCond %{HTTP_USER_AGENT}  ^curl/.*
+      RewriteRule ^/review/a/projects/ota-packages/branches/master/files/ota.sh/content https://{{ hostname }}/static/public/ota.sh [R=301,L]
+      RewriteRule ^/?(.*)$ https://review.{{ hostname }}/$1 [R=301,L]
+
+  - servername: 'tkanemoto.ddns.net'
+    documentroot: '{{ django_site_root }}/htdocs'
+    extra_parameters: |
+      RewriteEngine on
+      RewriteCond %{HTTP_USER_AGENT}  ^curl/.*
+      RewriteRule ^/review/a/projects/ota-packages/branches/master/files/ota.sh/content https://{{ hostname }}/static/public/ota.sh [R=301,L]
+      RewriteRule ^/?(.*)$ https://{{ hostname }}/$1 [R=301,L]
+
+apache_vhosts_ssl:
+  - servername: '{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      ServerAlias www.{{ hostname }}
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       WSGIDaemonProcess django \
         user=django \
         group=django \
-        processes=2 \
-        threads=2 \
+        processes=1 \
+        threads=15 \
         display-name=%{GROUP} \
-        python-path=/var/www/django-site/site:/var/www/django-site/.virtualenv/lib/python2.7/site-packages
+        python-path={{ django_site_root }}/site:{{ django_site_root }}/.virtualenv/lib/python2.7/site-packages
       WSGIProcessGroup django
-      WSGIScriptAlias / /var/www/django-site/site/project/wsgi.py
+      WSGIScriptAlias / {{ django_site_root }}/site/project/wsgi.py
       RewriteEngine on
-      Alias /static/ /var/www/django-site/static/
-      <Directory "/var/www/django-site/static">
+      RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
+      RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
+      Alias /static/ {{ django_site_root }}/static/
+      <Directory "{{ django_site_root }}/static">
         AllowOverride All
         Options +Indexes +FollowSymLinks
         Require all granted
         Header set Access-Control-Allow-Origin "*"
       </Directory>
-      Alias /media/ /var/www/django-site/static/media/
-      Alias /google{{ google_site_verification_code }}.html /var/www/django-site/htdocs/google{{ google_site_verification_code }}.html
+      Alias /media/ {{ django_site_root }}/static/media/
+      Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
       {{ apache_extra_parameters }}
 
-django_site_root: /var/www/django-site
-django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
-django_database_db: django
-django_database_username: django
+  - servername: 'ci.{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/ci.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/ci.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/ci.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      ProxyPass / http://{{ groups['jenkins'][0] }}:8080/ nocanon
+      ProxyPassReverse / http://{{ groups['jenkins'][0] }}:8080/
+
+  - servername: 'review.{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/review.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/review.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/review.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      AllowEncodedSlashes NoDecode
+      ProxyPass / http://{{ groups['gerrit'][0] }}:8081/ nocanon
+      ProxyPassReverse / http://{{ groups['gerrit'][0] }}:8081/
+
+  - servername: 'files.{{ hostname }}'
+    documentroot: '/var/www/owncloud'
+    certificate_file: '/etc/letsencrypt/live/files.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/files.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'

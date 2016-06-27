@@ -1,5 +1,4 @@
 ---
-jenkins_url_prefix: '/ci'
 jenkins_plugins:
   - git
   - ssh

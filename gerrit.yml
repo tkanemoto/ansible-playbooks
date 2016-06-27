@@ -7,3 +7,18 @@
 
   roles:
     - { role: kbrebanov.gerrit }
+
+  post_tasks:
+    - name: Hint that gerrit should start after postgresql
+      lineinfile: >
+        dest={{ gerrit_site_dir }}/bin/gerrit.sh
+        regexp="^# Should-Start:"
+        line="# Should-Start:      postgresql"
+        insertafter="^# Required-Stop"
+
+    - name: Hint that gerrit should start after postgresql
+      lineinfile: >
+        dest={{ gerrit_site_dir }}/bin/gerrit.sh
+        regexp="^# Should-Stop:"
+        line="# Should-Stop:       postgresql"
+        insertafter="^# Required-Start"
