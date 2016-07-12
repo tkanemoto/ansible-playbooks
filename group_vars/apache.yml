@@ -90,8 +90,8 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/ci.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/ci.{{ hostname }}/fullchain.pem'
     extra_parameters: |
-      ProxyPass / http://{{ groups['jenkins'][0] }}:8080/ nocanon
-      ProxyPassReverse / http://{{ groups['jenkins'][0] }}:8080/
+      ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
+      ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
 
   - servername: 'review.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
