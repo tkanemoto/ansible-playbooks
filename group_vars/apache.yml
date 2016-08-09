@@ -82,6 +82,8 @@ apache_vhosts_ssl:
       </Directory>
       Alias /media/ {{ django_site_root }}/static/media/
       Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
+      ProxyPass /xref http://127.0.0.1:8080/xref nocanon
+      ProxyPassReverse /xref http://127.0.0.1:8080/xref
       {{ apache_extra_parameters }}
 
   - servername: 'ci.{{ hostname }}'
