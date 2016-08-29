@@ -101,6 +101,10 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/review.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/review.{{ hostname }}/fullchain.pem'
     extra_parameters: |
+      Alias /clone-bundles {{ django_site_root }}/htdocs/clone-bundles
+      RewriteEngine on
+      RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
+      RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
       AllowEncodedSlashes NoDecode
       ProxyPass / http://{{ groups['gerrit'][0] }}:8081/ nocanon
       ProxyPassReverse / http://{{ groups['gerrit'][0] }}:8081/
