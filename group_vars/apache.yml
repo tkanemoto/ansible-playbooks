@@ -8,7 +8,8 @@ django_database_db: django
 django_database_username: django
 
 apache_remove_default_vhost: true
-apache_vhosts_filename: '000-vhosts.conf'
+#apache_vhosts_filename: '000-vhosts.conf'
+apache_create_vhosts: false
 apache_mods_enabled:
   - rewrite.load
   - proxy.load
@@ -82,8 +83,6 @@ apache_vhosts_ssl:
       </Directory>
       Alias /media/ {{ django_site_root }}/static/media/
       Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
-      ProxyPass /xref http://127.0.0.1:8080/xref nocanon
-      ProxyPassReverse /xref http://127.0.0.1:8080/xref
       {{ apache_extra_parameters }}
 
   - servername: 'ci.{{ hostname }}'
@@ -114,3 +113,12 @@ apache_vhosts_ssl:
     certificate_file: '/etc/letsencrypt/live/files.{{ hostname }}/cert.pem'
     certificate_key_file: '/etc/letsencrypt/live/files.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'
+
+  - servername: 'source.{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/source.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/source.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/source.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      ProxyPass /xref http://127.0.0.1:8080/xref nocanon
+      ProxyPassReverse /xref http://127.0.0.1:8080/xref

@@ -89,3 +89,5 @@
 - name: Touch wsgi.py
   file:
     path={{ django_site_root }}/site/project/wsgi.py state=touch
+
+- include: apache.yml
