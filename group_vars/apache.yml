@@ -91,6 +91,7 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/ci.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/ci.{{ hostname }}/fullchain.pem'
     extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
 
@@ -100,6 +101,7 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/review.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/review.{{ hostname }}/fullchain.pem'
     extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       Alias /clone-bundles {{ django_site_root }}/htdocs/clone-bundles
       RewriteEngine on
       RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
@@ -113,6 +115,8 @@ apache_vhosts_ssl:
     certificate_file: '/etc/letsencrypt/live/files.{{ hostname }}/cert.pem'
     certificate_key_file: '/etc/letsencrypt/live/files.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
 
   - servername: 'source.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
@@ -120,5 +124,6 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/source.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/source.{{ hostname }}/fullchain.pem'
     extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass /xref http://127.0.0.1:8080/xref nocanon
       ProxyPassReverse /xref http://127.0.0.1:8080/xref
