@@ -12,9 +12,9 @@ gerrit_sendmail_smtp_server: smtp.gmail.com
 gerrit_auth_type: OAUTH
 
 gerrit_extra_config_list:
-  - { section: core, option: packedGitOpenFiles, value: 32000 }
-  - { section: core, option: packedGitLimit, value: '512m' }
-  - { section: core, option: packedGitWindowSize, value: '512m' }
+  - { section: core, option: packedGitOpenFiles, value: 4096 }
+  - { section: core, option: packedGitLimit, value: '2g' }
+  - { section: core, option: packedGitWindowSize, value: '16k' }
   - { section: container, option: javaOptions, value: '-XX:+UseG1GC -Xmx5g -XX:+UseStringDeduplication' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'client-id', value: '932815769348-6d1ijbvtshaeerj648gn0ir5jdncoqbk.apps.googleusercontent.com' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'link-to-existing-openid-accounts', value: 'true' }
