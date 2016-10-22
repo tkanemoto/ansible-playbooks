@@ -127,3 +127,12 @@ apache_vhosts_ssl:
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass /xref http://127.0.0.1:8080/xref nocanon
       ProxyPassReverse /xref http://127.0.0.1:8080/xref
+
+  - servername: 'updates.{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/updates.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/updates.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/updates.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+      {{ updates_apache_config }}

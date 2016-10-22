@@ -5,6 +5,8 @@
   name: geerlingguy.jenkins
 - src: https://github.com/tkanemoto/ansible-role-gitrepo.git
   name: tkanemoto.gitrepo
+- src: https://github.com/tkanemoto/ansible-role-nodejs-systemd.git
+  name: tkanemoto.nodejs-systemd
 - src: https://github.com/tkanemoto/ansible-role-owncloud.git
   name: tkanemoto.owncloud
 - src: https://github.com/tkanemoto/ansible-role-transmission-rss.git
