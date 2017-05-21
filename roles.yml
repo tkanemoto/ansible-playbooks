@@ -11,3 +11,4 @@
   name: tkanemoto.owncloud
 - src: https://github.com/tkanemoto/ansible-role-transmission-rss.git
   name: tkanemoto.transmission-rss
+- src: geerlingguy.nodejs
