@@ -2,3 +2,4 @@
 - include: gerrit.yml
 - include: jenkins.yml
 - include: apache.yml
+- include: servers.yml

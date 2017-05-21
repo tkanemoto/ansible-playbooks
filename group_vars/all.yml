@@ -1,2 +1,4 @@
 ---
-postgresql_version: 9.5
+postgresql_version: 9.6
+sysctl_swappiness: 1
+sysctl_vfs_cache_pressure: 800

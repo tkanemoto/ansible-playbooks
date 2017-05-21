@@ -6,3 +6,8 @@ osgiliath
 
 [apache]
 osgiliath
+
+[servers:children]
+gerrit
+jenkins
+apache
