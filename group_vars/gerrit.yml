@@ -1,6 +1,6 @@
 ---
-gerrit_version: '2.12.2'
-gerrit_sha256sum: 'ff28bd84a078534b4fd1bf2e3e8b38cde5437c28e25c1e0a33dbcdf2182bbff7'
+gerrit_version: '2.14'
+gerrit_sha256sum: 29279cc395bbf71589e26812da1d2bcd76f61c2a0e2be806644defed39255db1
 gerrit_download_server: 'https://www.gerritcodereview.com/download'
 gerrit_canonical_web_url: 'https://review.tkanemoto.com/'
 gerrit_httpd_listen_url: "proxy-https://*:8081/"
@@ -15,7 +15,8 @@ gerrit_extra_config_list:
   - { section: core, option: packedGitOpenFiles, value: 4096 }
   - { section: core, option: packedGitLimit, value: '2g' }
   - { section: core, option: packedGitWindowSize, value: '16k' }
-  - { section: container, option: javaOptions, value: '-XX:+UseG1GC -Xmx5g -XX:+UseStringDeduplication' }
+  - { section: container, option: javaOptions, value: '-XX:+UseG1GC -Xmx3g -XX:+UseStringDeduplication' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'client-id', value: '932815769348-6d1ijbvtshaeerj648gn0ir5jdncoqbk.apps.googleusercontent.com' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'link-to-existing-openid-accounts', value: 'true' }
   - { section: 'plugin "gerrit-oauth-provider-github-oauth"', option: 'client-id', value: '915b01ff9294158cb16d' }
+  - { section: auth, option: gitBasicAuthPolicy, value: HTTP }
