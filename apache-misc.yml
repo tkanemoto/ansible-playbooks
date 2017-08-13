@@ -1,0 +1,11 @@
+---
+- hosts: apache
+  become: yes
+
+  vars_files:
+    - encrypted_vars/apache.yml
+
+  roles:
+    - { role: tkanemoto.transmission-rss }
+    - { role: geerlingguy.nodejs }
+    - { role: tkanemoto.nodejs-systemd }

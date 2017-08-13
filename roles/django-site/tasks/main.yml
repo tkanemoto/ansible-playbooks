@@ -78,7 +78,7 @@
     dest={{ django_site_root }}/site/project/settings_local.py
     owner=django
     group=django
-    mode=0600
+    mode=0640
 
 - name: Prepare database schema
   command: make prepare-db

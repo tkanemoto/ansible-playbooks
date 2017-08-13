@@ -1,4 +1,4 @@
-{{ apache_global_vhost_settings }}
+{% if not apache_vhosts_ssl and item.0 == 0 %}{{ apache_global_vhost_settings }}{% endif %}
 
 <VirtualHost {{ apache_listen_ip }}:{{ apache_listen_port }}>
   ServerName {{ item.1.servername }}
