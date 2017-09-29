@@ -80,6 +80,10 @@
     group=django
     mode=0640
 
+- name: Remove .freeze.list
+  file:
+    path={{ django_site_root }}/.virtualenv/.freeze.list state=absent
+
 - name: Prepare database schema
   command: make prepare-db
     chdir={{ django_site_root }}/site
