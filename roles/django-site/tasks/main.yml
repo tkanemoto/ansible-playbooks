@@ -4,12 +4,14 @@
     path={{ django_site_root | mandatory }}
     state=directory
     recurse=yes
+  tags: ['django']
 
 - name: Create django group
   group:
     name=django
     system=yes
     state=present
+  tags: ['django']
 
 - name: Create django user
   user:
@@ -20,6 +22,7 @@
     shell=/bin/bash
     system=yes
     state=present
+  tags: ['django']
 
 - name: Set django-site directory mode
   file:
@@ -28,6 +31,7 @@
     owner=django
     group=django
     mode=02775
+  tags: ['django']
 
 - name: Ensure django-site htdocs directory exists
   file:
@@ -36,6 +40,7 @@
     owner=django
     group=django
     mode=02775
+  tags: ['django']
 
 - name: Generate Google site verification file
   copy:
@@ -45,6 +50,7 @@
     group: django
     mode: 0644
   when: google_site_verification_code is defined
+  tags: ['django']
 
 - name: Link media dir
   file:
@@ -52,15 +58,18 @@
     dest={{ django_site_root | mandatory }}/media
     force=yes
     state=link
+  tags: ['django']
 
 - name: Repo-init the django manifest
   command: repo init -u {{ django_site_manifest_url | mandatory }}
     creates={{ django_site_root }}/.repo/manifest.xml
     chdir={{ django_site_root }}
+  tags: ['django']
 
 - name: Repo-sync the latest source tree
   command: repo sync
     chdir={{ django_site_root }}
+  tags: ['django']
 
 - name: Ensure dependencies are installed.
   apt: pkg={{ item }} state=installed
@@ -69,6 +78,7 @@
     - python-pip
     - libjpeg-dev
     - python-letsencrypt-apache
+  tags: ['django']
 
 - include: postgresql.yml
 
@@ -79,19 +89,23 @@
     owner=django
     group=django
     mode=0640
+  tags: ['django']
 
 - name: Remove .freeze.list
   file:
     path={{ django_site_root }}/.virtualenv/.freeze.list state=absent
+  tags: ['django']
 
 - name: Prepare database schema
   command: make prepare-db
     chdir={{ django_site_root }}/site
   environment:
     DJANGO_SETTINGS_MODULE: project.settings_local
+  tags: ['django']
 
 - name: Touch wsgi.py
   file:
     path={{ django_site_root }}/site/project/wsgi.py state=touch
+  tags: ['django']
 
 - include: apache.yml
