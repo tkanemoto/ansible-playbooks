@@ -24,6 +24,7 @@ apache_mods_enabled:
   - proxy_http.load
   - wsgi.load
   - headers.load
+  - reqtimeout.load
 apache_packages:
   - apache2
   - apache2-utils
@@ -63,6 +64,7 @@ apache_vhosts_ssl:
     extra_parameters: |
       ServerAlias www.{{ hostname }}
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+      RequestReadTimeout header=90,MinRate=500 body=90,MinRate=500
       WSGIDaemonProcess django \
         user=django \
         group=django \
