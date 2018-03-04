@@ -94,6 +94,7 @@
 - name: Remove .freeze.list
   file:
     path={{ django_site_root }}/.virtualenv/.freeze.list state=absent
+  when: 'unfreeze is defined and unfreeze'
   tags: ['django']
 
 - name: Prepare database schema
