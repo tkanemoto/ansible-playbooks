@@ -5,7 +5,7 @@
     value={{ sysctl_swappiness }}
     state=present
     sysctl_set=yes
-    sysctl_file=/etc/sysctl.d/99-tkserver
+    sysctl_file=/etc/sysctl.d/99-tkserver.conf
 
 - name: Adjust vm.vfs_cache_pressure sysctl setting
   sysctl:
@@ -13,5 +13,5 @@
     value={{ sysctl_vfs_cache_pressure }}
     state=present
     sysctl_set=yes
-    sysctl_file=/etc/sysctl.d/99-tkserver
+    sysctl_file=/etc/sysctl.d/99-tkserver.conf
 
