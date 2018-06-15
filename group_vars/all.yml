@@ -1,5 +1,5 @@
 ---
-postgresql_version: 9.6
+postgresql_version: 10
 sysctl_swappiness: 1
 sysctl_vfs_cache_pressure: 800
 nodejs_install_npm_user: root
