@@ -75,10 +75,29 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - make
-    - python-pip
+    - python3-pip
     - libjpeg-dev
     - python-letsencrypt-apache
+    - python3-psycopg2
+    - apache2-dev
   tags: ['django']
+
+- name: Install pipenv
+  pip: name=pipenv version=2018.6.25 state=present
+  tags: ['django']
+
+- name: Upgrade pip
+  pip: name=pip version=18.0 state=present
+  tags: ['django']
+
+- name: Install mod_wsgi
+  pip: name=mod_wsgi state=latest
+  tags: ['django']
+
+- name: Configure mod_wsgi
+  shell: >
+    mod_wsgi-express module-config > /etc/apache2/mods-available/wsgi.load
+  changed_when: false
 
 - include: postgresql.yml
 
@@ -91,15 +110,10 @@
     mode=0640
   tags: ['django']
 
-- name: Remove .freeze.list
-  file:
-    path={{ django_site_root }}/.virtualenv/.freeze.list state=absent
-  when: 'unfreeze is defined and unfreeze'
-  tags: ['django']
-
 - name: Prepare database schema
   command: make prepare-db
     chdir={{ django_site_root }}/site
+  become_user: django
   environment:
     DJANGO_SETTINGS_MODULE: project.settings_local
   tags: ['django']

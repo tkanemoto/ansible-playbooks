@@ -28,7 +28,7 @@ apache_mods_enabled:
 apache_packages:
   - apache2
   - apache2-utils
-  - libapache2-mod-wsgi
+  - apache2-dev
 
 apache_vhosts:
   - servername: '{{ hostname }}'
@@ -71,9 +71,10 @@ apache_vhosts_ssl:
         processes=1 \
         threads=15 \
         display-name=%{GROUP} \
-        python-path={{ django_site_root }}/site:{{ django_site_root }}/.virtualenv/lib/python2.7/site-packages
+        python-home={{ django_site_root }}/.virtualenv \
+        python-path={{ django_site_root }}/site
       WSGIProcessGroup django
-      WSGIScriptAlias / {{ django_site_root }}/site/project/wsgi.py
+      WSGIScriptAlias / {{ django_site_root }}/site/project/wsgi.py process-group=django
       RewriteEngine on
       RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
       RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
