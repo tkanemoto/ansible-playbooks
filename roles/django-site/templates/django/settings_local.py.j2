@@ -131,10 +131,10 @@ COMPRESS_ENABLED = True
 
 ADMIN_SITE_HEADER = "Tak's site admin site thingie"
 
-TORRENT_SEARCH_URL = 'https://tpbship.org/search/{query}/{page}/7/'
-TORRENT_SEARCH_DEFAULT_PAGE = 0
+TORRENT_SEARCH_URL = 'https://thepiratebay.online/search/{query}/{page}/7/0'
+TORRENT_SEARCH_DEFAULT_PAGE = 1
 TORRENT_SEARCH_RESULT_FILTERS = [
-    {'name': 'div', 'id': 'SearchResults'},
+    {'name': 'table', 'id': 'searchResult'},
 ]
 
 {{ django_extra_settings }}
