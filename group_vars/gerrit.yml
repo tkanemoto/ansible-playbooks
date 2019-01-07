@@ -1,7 +1,7 @@
 ---
-gerrit_version: '2.15.2'
-gerrit_sha256sum: e0c4961b0ce0fc1633a92f1fb56f86a33ebc5e32d99a4feec6f6d7a1c6051276
-gerrit_download_server: 'https://www.gerritcodereview.com/download'
+gerrit_version: '2.15.7'
+gerrit_sha256sum: 4cb05cb11458a0d7e189cd6138ebf8515411871d399ff1f5aaf5b62e62c636f2
+#gerrit_download_server: 'https://www.gerritcodereview.com/download'
 
 #gerrit_version: '2.15'
 #gerrit_sha256sum: 7c07ce361d05212511097c8f635c7b60fb0c1e3c8be8c8f8b8fa1c4655f42d9e
@@ -13,17 +13,29 @@ gerrit_database_type: 'postgresql'
 gerrit_database_db: gerritdb
 gerrit_database_username: 'gerrit'
 # gerrit_database_password: defined in encrypted_vars
-gerrit_sendmail_smtp_server: smtp.gmail.com
+gerrit_sendemail_smtp_server: smtp.mailgun.org
 gerrit_auth_type: OAUTH
 
 gerrit_extra_config_list:
   - { section: core, option: packedGitOpenFiles, value: 4096 }
-  - { section: core, option: packedGitLimit, value: '2g' }
+  - { section: core, option: packedGitLimit, value: '1g' }
   - { section: core, option: packedGitWindowSize, value: '16k' }
   - { section: container, option: javaOptions, value: '-XX:+UseG1GC -Xmx3g -XX:+UseStringDeduplication' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'client-id', value: '932815769348-6d1ijbvtshaeerj648gn0ir5jdncoqbk.apps.googleusercontent.com' }
   - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'link-to-existing-openid-accounts', value: 'true' }
   - { section: 'plugin "gerrit-oauth-provider-github-oauth"', option: 'client-id', value: '915b01ff9294158cb16d' }
   - { section: auth, option: gitBasicAuthPolicy, value: HTTP }
+  - { section: auth, option: allowRegisterNewEmail, value: 'true' }
+  - { section: oauth, option: allowRegisterNewEmail, value: 'true' }
+  - { section: change, option: largeChange, value: 2000 }
+  - { section: changeCleanup, option: abandonAfter, value: 1y }
+  - { section: changeCleanup, option: startTime, value: '06:00' }
+  - { section: changeCleanup, option: interval, value: '1 day' }
+  - { section: download, option: command, value: checkout }
+  - { section: download, option: scheme, value: http }
+  - { section: sendemail, option: smtpEncryption, value: ssl }
+  - { section: sendemail, option: smtpServerPort, value: 465 }
+  - { section: sendemail, option: smtpUser, value: 'postmaster@tkanemoto.com' }
+  - { section: sendemail, option: includeDiff, value: 'true' }
 
 gerrit_service_after: syslog.target network.target mnt-share.mount postgresql.service
