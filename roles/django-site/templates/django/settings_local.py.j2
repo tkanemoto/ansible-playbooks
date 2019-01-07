@@ -131,10 +131,26 @@ COMPRESS_ENABLED = True
 
 ADMIN_SITE_HEADER = "Tak's site admin site thingie"
 
-TORRENT_SEARCH_URL = 'https://thepiratebay.online/search/{query}/{page}/7/0'
-TORRENT_SEARCH_DEFAULT_PAGE = 1
-TORRENT_SEARCH_RESULT_FILTERS = [
-    {'name': 'table', 'id': 'searchResult'},
-]
+TORRENT_SEARCH_ENGINES = {
+    'btdb': {
+        'url': 'https://btdb.to/q/{query}/{page}?sort=popular',
+        'default-page': 1,
+        'filters': [
+            {'name': 'div', 'class_': 'nav'},
+            {'name': 'ul', 'class_': 'search-ret-list'},
+            {'name': 'div', 'class_': 'nav'},
+        ]
+    },
+    'thepiratebay.online': {
+        'url': 'https://thepiratebay.online/search/{query}/{page}/7/0',
+        'default-page': 0,
+        'filters': [{'name': 'table', 'id': 'searchResult'}]
+    },
+    'tpbship.org': {
+        'url': 'https://tpbship.org/search/{query}/{page}/7/',
+        'default-page': 0,
+        'filters': [{'name': 'div', 'id': 'SearchResults'}]
+    },
+}
 
 {{ django_extra_settings }}
