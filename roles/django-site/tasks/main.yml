@@ -1,4 +1,8 @@
 ---
+- name: Include version-specific variables for Ubuntu.
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == 'Ubuntu'
+
 - name: Ensure django-site directory exists
   file:
     path={{ django_site_root | mandatory }}
@@ -22,6 +26,13 @@
     shell=/bin/bash
     system=yes
     state=present
+  tags: ['django']
+
+- name: Add jenkins to django group
+  user:
+    name=jenkins
+    append=yes
+    group=django
   tags: ['django']
 
 - name: Set django-site directory mode
@@ -71,15 +82,20 @@
     chdir={{ django_site_root }}
   tags: ['django']
 
+- name: Include version-specific variables for Debian.
+  include_vars: "{{ ansible_distribution|title }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_os_family == 'Debian'
+
+- name: Add certbot apt repository.
+  apt_repository:
+    repo: ppa:certbot/certbot
+    state: present
+    update_cache: true
+  when: "ansible_distribution_version.split('.')[0] == '18'"
+
 - name: Ensure dependencies are installed.
   apt: pkg={{ item }} state=installed
-  with_items:
-    - make
-    - python3-pip
-    - libjpeg-dev
-    - python-letsencrypt-apache
-    - python3-psycopg2
-    - apache2-dev
+  with_items: '{{ django_site_packages }}'
   tags: ['django']
 
 - name: Install pipenv
@@ -124,3 +140,4 @@
   tags: ['django']
 
 - include: apache.yml
+  tags: ['apache-conf', 'django']

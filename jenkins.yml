@@ -2,6 +2,9 @@
 - hosts: jenkins
   become: yes
 
+  vars_files:
+    - encrypted_vars/jenkins.yml
+
   pre_tasks:
     # Work around https://github.com/geerlingguy/ansible-role-jenkins/issues/47
     - name: Fetch Jenkins 1.658
@@ -9,9 +12,11 @@
         url: https://pkg.jenkins.io/debian/binary/jenkins_1.658_all.deb
         dest: /var/lib/jenkins_1.658_all.deb
         checksum: sha256:8cf15cd5d107dedd6380fed15f6f157819544ab698eea6a1dcb3b8c98a9352b7
+      when: false
 
     - name: Install Jenkins 1.658
       apt: deb=/var/lib/jenkins_1.658_all.deb
+      when: false
 
   roles:
     - geerlingguy.jenkins

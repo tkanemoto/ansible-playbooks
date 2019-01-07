@@ -25,6 +25,7 @@ apache_mods_enabled:
   - wsgi.load
   - headers.load
   - reqtimeout.load
+  - ssl.load
 apache_packages:
   - apache2
   - apache2-utils

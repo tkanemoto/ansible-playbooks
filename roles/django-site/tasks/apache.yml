@@ -6,7 +6,6 @@
 - name: Get installed version of Apache.
   shell: "{{ apache_daemon_path }}{{ apache_daemon }} -v"
   changed_when: false
-  always_run: yes
   register: _apache_version
 
 - name: Create apache_version variable.
@@ -18,6 +17,11 @@
 
 - include_vars: roles/geerlingguy.apache/vars/apache-24.yml
   when: "apache_version.split('.')[1] == '4'"
+
+- name: Check whether certificates defined in vhosts exist.
+  stat: 'path={{ item.certificate_file }}'
+  register: apache_ssl_certificates
+  with_items: '{{ apache_vhosts_ssl }}'
 
 - name: Add apache vhost configuration files - HTTPS
   template:

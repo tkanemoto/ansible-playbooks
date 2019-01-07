@@ -16,10 +16,16 @@
 {% if apache_vhosts_version == "2.4" %}
   SSLCompression off
 {% endif %}
+
+{% if apache_ssl_certificates.results[item.0].stat.exists %}
   SSLCertificateFile {{ item.1.certificate_file }}
   SSLCertificateKeyFile {{ item.1.certificate_key_file }}
 {% if item.1.certificate_chain_file is defined %}
   SSLCertificateChainFile {{ item.1.certificate_chain_file }}
+{% endif %}
+{% else %}
+  SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+  SSLCertificateKeyFile   /etc/ssl/private/ssl-cert-snakeoil.key
 {% endif %}
 
 {% if item.1.serveradmin is defined %}

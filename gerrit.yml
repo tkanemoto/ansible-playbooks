@@ -8,6 +8,12 @@
   roles:
     - { role: kbrebanov.gerrit }
 
+  pre_tasks:
+    - name: Make sure Python3 Psycopg2 is installed
+      apt: name={{ item }} update_cache=yes state=installed
+      with_items:
+        - python3-psycopg2
+
   post_tasks:
     - name: Hint that gerrit should start after postgresql
       lineinfile: >
@@ -15,6 +21,7 @@
         regexp="^# Should-Start:"
         line="# Should-Start:      postgresql"
         insertafter="^# Required-Stop"
+      when: false
 
     - name: Hint that gerrit should start after postgresql
       lineinfile: >
@@ -22,3 +29,4 @@
         regexp="^# Should-Stop:"
         line="# Should-Stop:       postgresql"
         insertafter="^# Required-Start"
+      when: false
