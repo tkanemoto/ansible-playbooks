@@ -151,6 +151,27 @@ TORRENT_SEARCH_ENGINES = {
         'default-page': 0,
         'filters': [{'name': 'div', 'id': 'SearchResults'}]
     },
+
+    'pirateproxy.app': {
+        'url': 'https://pirateproxy.app/search/{query}/{page}/7/0',
+        'default-page': 0,
+        'filters': [{'name': 'div', 'id': 'SearchResults'}]
+    },
+    'theproxybay.net': {
+        'url': 'https://theproxybay.net/?load=/search/{query}/{page}/7//',
+        'default-page': 0,
+        'filters': [{'name': 'div', 'id': 'SearchResults'}]
+    },
+    'piratebayblocked.com': {
+        'url': 'https://piratebayblocked.com/search/{query}/{page}/7/0',
+        'default-page': 1,
+        'filters': [{'name': 'table', 'id': 'searchResult'}]
+    },
+    'thepiratebay.gdn': {
+        'url': 'https://thepiratebay.gdn/search/{query}/{page}/7/0',
+        'default-page': 1,
+        'filters': [{'name': 'table', 'id': 'searchResult'}]
+    },
 }
 
 {{ django_extra_settings }}

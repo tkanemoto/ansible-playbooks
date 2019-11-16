@@ -7,4 +7,3 @@ jenkins_plugins:
   - mask-passwords
   - description-setter
   - envinject
-jenkins_version: 1.658

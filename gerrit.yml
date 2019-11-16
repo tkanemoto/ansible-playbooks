@@ -10,7 +10,7 @@
 
   pre_tasks:
     - name: Make sure Python3 Psycopg2 is installed
-      apt: name={{ item }} update_cache=yes state=installed
+      apt: name={{ item }} update_cache=yes state=present
       with_items:
         - python3-psycopg2
 

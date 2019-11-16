@@ -99,6 +99,8 @@ apache_vhosts_ssl:
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
+      ProxyRequests     Off
+      AllowEncodedSlashes NoDecode
 
   - servername: 'review.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'

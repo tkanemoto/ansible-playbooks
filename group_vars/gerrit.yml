@@ -31,6 +31,9 @@ gerrit_extra_config_list:
   - { section: changeCleanup, option: abandonAfter, value: 1y }
   - { section: changeCleanup, option: startTime, value: '06:00' }
   - { section: changeCleanup, option: interval, value: '1 day' }
+  - { section: gc, option: startTime, value: '01:30' }
+  - { section: gc, option: interval, value: '7 day' }
+  - { section: gc, option: aggressive, value: 'true' }
   - { section: download, option: command, value: checkout }
   - { section: download, option: scheme, value: http }
   - { section: sendemail, option: smtpEncryption, value: ssl }
