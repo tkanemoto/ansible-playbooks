@@ -172,6 +172,12 @@ TORRENT_SEARCH_ENGINES = {
         'default-page': 1,
         'filters': [{'name': 'table', 'id': 'searchResult'}]
     },
+    'proxybay.zone': {
+        'url': 'https://proxybay.zone/search/{query}/{page}//0',
+        'default-page': 1,
+        #'filters': [{'name': 'table', 'id': 'searchResult'}]
+        'filters': [{'name': 'div', 'id': 'main-content'}]
+    },
 }
 
 {{ django_extra_settings }}
