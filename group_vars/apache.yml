@@ -1,6 +1,24 @@
 ---
 hostname: tkanemoto.com
 hostname_short: '{{ hostname | regex_replace("\..*$", "") }}'
+allowed_csp_domains:
+  - 'https://www.instagram.com'
+  - 'https://fonts.gstatic.com'
+  - 'https://www.google-analytics.com'
+  - 'https://www.googletagmanager.com'
+  - 'https://cdnjs.cloudflare.com'
+  - 'https://www.google.com'
+  - 'https://www.gstatic.com'
+  - 'https://platform.twitter.com'
+  - 'https://syndication.twitter.com'
+  - 'https://platform.linkedin.com'
+  - 'https://connect.facebook.net'
+  - 'https://snap.licdn.com'
+  - 'https://static.ads-twitter.com'
+  - 'https://px.ads.linkedin.com'
+  - 'https://analytics.twitter.com'
+  - 'https://www.linkedin.com'
+  - 'https://www.henrisalonen.com'
 
 apache_global_vhost_settings: |
   DirectoryIndex index.php index.html
@@ -101,6 +119,7 @@ apache_vhosts_ssl:
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
       ProxyRequests     Off
       AllowEncodedSlashes NoDecode
+      Header set Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' {{ allowed_csp_domains | join(' ') }}"
 
   - servername: 'review.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
