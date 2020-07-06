@@ -1,7 +1,7 @@
 ---
-postgresql_version: 11
+postgresql_version: 12
 sysctl_swappiness: 10
 sysctl_vfs_cache_pressure: 1000
 nodejs_install_npm_user: root
 nodejs_version: "8.x"
-owncloud_package_spec: 'owncloud-files=10.3.*'
+owncloud_package_spec: 'owncloud-files=10.4.*'

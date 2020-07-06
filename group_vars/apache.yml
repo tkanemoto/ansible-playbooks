@@ -44,13 +44,15 @@ apache_mods_enabled:
   - headers.load
   - reqtimeout.load
   - ssl.load
+  - php7.2.load
 apache_packages:
   - apache2
   - apache2-utils
   - apache2-dev
+  - libapache2-mod-php
 
 apache_vhosts:
-  - servername: '{{ hostname }}'
+  - servername: 'apps.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
     extra_parameters: |
       RewriteEngine on
@@ -75,13 +77,12 @@ apache_vhosts:
       RewriteRule ^/?(.*)$ https://{{ hostname }}/$1 [R=301,L]
 
 apache_vhosts_ssl:
-  - servername: '{{ hostname }}'
+  - servername: 'apps.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/letsencrypt/live/apps.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/apps.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/apps.{{ hostname }}/fullchain.pem'
     extra_parameters: |
-      ServerAlias www.{{ hostname }}
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       RequestReadTimeout header=90,MinRate=500 body=90,MinRate=500
       WSGIDaemonProcess django \
@@ -107,6 +108,25 @@ apache_vhosts_ssl:
       Alias /media/ {{ django_site_root }}/static/media/
       Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
       {{ apache_extra_parameters }}
+
+  - servername: 'dr.{{ hostname }}'
+    documentroot: '{{ django_site_root }}/htdocs'
+    certificate_file: '/etc/letsencrypt/live/dr.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/dr.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/dr.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+      ProxyPass / http://192.168.11.211:8080/ nocanon
+      ProxyPassReverse / http://192.168.11.211:8080/
+      ProxyRequests     Off
+      AllowEncodedSlashes NoDecode
+      <Location />
+        AuthType Basic
+        AuthName "Restricted"
+        AuthBasicProvider file
+        AuthUserFile "{{ django_site_root }}/htpasswd"
+        Require valid-user
+      </Location>
 
   - servername: 'ci.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
@@ -153,6 +173,13 @@ apache_vhosts_ssl:
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass /xref http://127.0.0.1:8080/xref nocanon
       ProxyPassReverse /xref http://127.0.0.1:8080/xref
+      <Location />
+        AuthType Basic
+        AuthName "Restricted"
+        AuthBasicProvider file
+        AuthUserFile "{{ django_site_root }}/htpasswd"
+        Require valid-user
+      </Location>
 
   - servername: 'updates.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'

@@ -71,6 +71,14 @@
     state=link
   tags: ['django']
 
+- name: Set git identity to shut repo up
+  command: git config --global user.name Admin
+  tags: ['django']
+
+- name: Set git identity to shut repo up
+  command: git config --global user.email admin@localhost
+  tags: ['django']
+
 - name: Repo-init the django manifest
   command: repo init -u {{ django_site_manifest_url | mandatory }}
     creates={{ django_site_root }}/.repo/manifest.xml

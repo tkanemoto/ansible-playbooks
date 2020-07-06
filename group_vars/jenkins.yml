@@ -1,9 +1,9 @@
 ---
 jenkins_http_port: 8082
-jenkins_plugins:
-  - git
-  - ssh
-  - ec2
-  - mask-passwords
-  - description-setter
-  - envinject
+jenkins_plugins: []
+  #- git
+  #- ssh
+  #- ec2
+  #- mask-passwords
+  #- description-setter
+  #- envinject

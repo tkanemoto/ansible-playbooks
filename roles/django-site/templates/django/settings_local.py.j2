@@ -131,7 +131,13 @@ COMPRESS_ENABLED = True
 
 ADMIN_SITE_HEADER = "Tak's site admin site thingie"
 
-TORRENT_SEARCH_ENGINES = {}
+TORRENT_SEARCH_ENGINES = {
+    'btdb.io': {
+        'url': 'https://btdb.io/search/{query}/{page}/',
+        'default-page': 0,
+        'filters': [{'name': 'div', 'class': 'card-body'}]
+    }
+}
 for site in [
         'proxybay.zone',
         'thepiratebay.blog',
@@ -145,10 +151,10 @@ for site in [
         'piratebay1.info',
         ]:
     TORRENT_SEARCH_ENGINES[site] = {
-        'url': 'https://' + site + '/search/{query}/{page}//0',
+        'url': 'https://' + site + '/search.php?q={query}&p={page}&cat=0',
         'default-page': 1,
         #'filters': [{'name': 'table', 'id': 'searchResult'}]
-        'filters': [{'name': 'div', 'id': 'SearchResults'}]
+        'filters': [{'name': 'ol', 'id': 'torrents'}]
     }
 
 {{ django_extra_settings }}
