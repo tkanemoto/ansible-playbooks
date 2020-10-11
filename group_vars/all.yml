@@ -1,5 +1,5 @@
 ---
-postgresql_version: 12
+postgresql_version: 13
 sysctl_swappiness: 10
 sysctl_vfs_cache_pressure: 1000
 nodejs_install_npm_user: root
