@@ -107,11 +107,11 @@
   tags: ['django']
 
 - name: Install pipenv
-  pip: name=pipenv version=2018.6.25 state=present
+  pip: name=pipenv version=2020.8.13 state=present
   tags: ['django']
 
 - name: Upgrade pip
-  pip: name=pip version=18.0 state=present
+  pip: name=pip version=20.2.3 state=present
   tags: ['django']
 
 - name: Install mod_wsgi

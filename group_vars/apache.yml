@@ -109,25 +109,6 @@ apache_vhosts_ssl:
       Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
       {{ apache_extra_parameters }}
 
-  - servername: 'dr.{{ hostname }}'
-    documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/dr.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/dr.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/dr.{{ hostname }}/fullchain.pem'
-    extra_parameters: |
-      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
-      ProxyPass / http://192.168.11.211:8080/ nocanon
-      ProxyPassReverse / http://192.168.11.211:8080/
-      ProxyRequests     Off
-      AllowEncodedSlashes NoDecode
-      <Location />
-        AuthType Basic
-        AuthName "Restricted"
-        AuthBasicProvider file
-        AuthUserFile "{{ django_site_root }}/htpasswd"
-        Require valid-user
-      </Location>
-
   - servername: 'ci.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
     certificate_file: '/etc/letsencrypt/live/ci.{{ hostname }}/cert.pem'
