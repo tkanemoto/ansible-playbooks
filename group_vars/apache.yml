@@ -137,13 +137,13 @@ apache_vhosts_ssl:
       ProxyPass / http://{{ groups['gerrit'][0] }}:8081/ nocanon
       ProxyPassReverse / http://{{ groups['gerrit'][0] }}:8081/
 
-  - servername: 'files.{{ hostname }}'
-    documentroot: '/var/www/owncloud'
-    certificate_file: '/etc/letsencrypt/live/files.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/files.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'
-    extra_parameters: |
-      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+  # - servername: 'files.{{ hostname }}'
+  #   documentroot: '/var/www/owncloud'
+  #   certificate_file: '/etc/letsencrypt/live/files.{{ hostname }}/cert.pem'
+  #   certificate_key_file: '/etc/letsencrypt/live/files.{{ hostname }}/privkey.pem'
+  #   certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'
+  #   extra_parameters: |
+  #     Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
 
   - servername: 'source.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'

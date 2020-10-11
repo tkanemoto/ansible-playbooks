@@ -1,0 +1,14 @@
+---
+- hosts: apache
+  become: yes
+
+  vars:
+    google_site_verification_code: ''
+    apache_extra_parameters: []
+    updates_apache_config: []
+
+  tasks:
+    - name: Install certs
+      shell: certbot certonly -d {{ item.servername }} --apache -m me@tkanemoto.com --agree-tos -n
+      with_items: '{{ apache_vhosts_ssl }}'
+

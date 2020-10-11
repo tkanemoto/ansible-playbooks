@@ -7,5 +7,4 @@
 
   roles:
     - { role: django-site }
-    - { role: tkanemoto.owncloud }
     - { role: geerlingguy.apache }
