@@ -115,6 +115,8 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/letsencrypt/live/ci.{{ hostname }}/privkey.pem'
     certificate_chain_file: '/etc/letsencrypt/live/ci.{{ hostname }}/fullchain.pem'
     extra_parameters: |
+      LimitRequestFieldSize 32760
+      LimitRequestLine 32760
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/

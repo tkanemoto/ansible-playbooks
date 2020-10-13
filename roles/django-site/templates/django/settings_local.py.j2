@@ -17,6 +17,15 @@ ALLOWED_HOSTS = ['*']
 
 MEDIA_ROOT = '/var/www/django-site/media/'
 MEDIA_URL = '/media/'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 LOGIN_URL = '/social/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/'

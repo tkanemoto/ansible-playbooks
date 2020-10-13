@@ -6,3 +6,4 @@ django_site_packages:
   - python-certbot-apache
   - python3-psycopg2
   - apache2-dev
+  - memcached

@@ -5,3 +5,4 @@ sysctl_vfs_cache_pressure: 1000
 nodejs_install_npm_user: root
 nodejs_version: "8.x"
 owncloud_package_spec: 'owncloud-files=10.4.*'
+transmission_rss_version: 1.2.0
