@@ -22,9 +22,10 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': 'apps_',
     }
 }
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 LOGIN_URL = '/social/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/'
