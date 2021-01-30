@@ -5,6 +5,19 @@
   vars_files:
     - encrypted_vars/apache.yml
 
+  pre_tasks:
+    - name: Inject passwords
+      lineinfile:
+        dest: '{{ django_site_root }}/.netrc'
+        line: 'machine {{ item.machine }} login {{ item.login }} password {{ item.password }}'
+        regexp: '^machine {{ item.machine }}'
+        state: present
+        owner: django
+        group: django
+        mode: 0600
+        create: yes
+      with_items: '{{ django_netrc_entries }}'
+
   roles:
     - { role: django-site }
     - { role: geerlingguy.apache }

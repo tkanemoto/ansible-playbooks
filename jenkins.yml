@@ -18,3 +18,16 @@
 
   roles:
     - geerlingguy.jenkins
+
+  post_tasks:
+    - name: Inject passwords
+      lineinfile:
+        dest: '/var/lib/.netrc'
+        line: 'machine {{ item.machine }} login {{ item.login }} password {{ item.password }}'
+        regexp: '^machine {{ item.machine }}'
+        state: present
+        owner: jenkins
+        group: jenkins
+        mode: 0600
+        create: yes
+      with_items: '{{ jenkins_netrc_entries }}'
