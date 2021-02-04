@@ -22,11 +22,11 @@ allowed_csp_domains:
 
 apache_global_vhost_settings: |
   DirectoryIndex index.php index.html
-  #LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %D %B" {{ hostname_short }}_access
-  LogFormat "%v:%p %h %l %u %t \"%r\" %>s %D \"%{Referer}i\" \"%{User-Agent}i\"" {{ hostname_short }}_access
   LogLevel warn
-  ErrorLog /var/log/apache2/{{ hostname }}_error.log
-  CustomLog /var/log/apache2/{{ hostname }}_access.log {{ hostname_short }}_access
+  #LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %D %B" {{ hostname_short }}_access
+  #LogFormat "%v:%p %h %l %u %t \"%r\" %>s %D \"%{Referer}i\" \"%{User-Agent}i\"" {{ hostname_short }}_access
+  #CustomLog /var/log/apache2/{{ hostname }}_access.log {{ hostname_short }}_access
+  ErrorLog /var/log/apache2/error.log
 
 django_site_root: /var/www/django-site
 django_site_manifest_url: https://github.com/tkanemoto/django-manifest.git
