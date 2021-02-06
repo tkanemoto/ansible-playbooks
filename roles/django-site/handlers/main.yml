@@ -1,0 +1,6 @@
+---
+# handlers file for django-site
+
+- name: restart transmission-monitor
+  systemd: name=transmission-monitor state=restarted
+  tags: ['transmission', 'django']

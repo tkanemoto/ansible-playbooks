@@ -88,11 +88,13 @@
 - name: Repo-sync the latest source tree
   command: repo sync
     chdir={{ django_site_root }}
+  notify: restart transmission-monitor
   tags: ['django']
 
 - name: Include version-specific variables for Debian.
   include_vars: "{{ ansible_distribution|title }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == 'Debian'
+  tags: ['django']
 
 - name: Add certbot apt repository.
   apt_repository:
@@ -100,6 +102,7 @@
     state: present
     update_cache: true
   when: "ansible_distribution_version.split('.')[0] == '18'"
+  tags: ['django']
 
 - name: Ensure dependencies are installed.
   apt: pkg={{ item }} state=present
@@ -122,6 +125,7 @@
   shell: >
     mod_wsgi-express module-config > /etc/apache2/mods-available/wsgi.load
   changed_when: false
+  tags: ['django']
 
 - include: postgresql.yml
 
@@ -143,9 +147,22 @@
   tags: ['django']
 
 - name: Touch wsgi.py
-  file:
-    path={{ django_site_root }}/site/project/wsgi.py state=touch
+  shell: touch {{ django_site_root }}/site/project/wsgi.py
   tags: ['django']
+
+- name: Install transmission-monitor systemd service file
+  template: >
+    src=django/transmission-monitor.service.j2
+    dest=/etc/systemd/system/transmission-monitor.service
+    owner=root
+    group=root
+    mode=0644
+  notify: restart transmission-monitor
+  tags: ['transmission', 'django']
+
+- name: Ensure transmission-monitor service is started and enabled on boot
+  systemd: state=started name=transmission-monitor enabled=yes
+  tags: ['transmission', 'django']
 
 - include: apache.yml
   tags: ['apache-conf', 'django']

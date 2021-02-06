@@ -1,0 +1,15 @@
+# Systemd unit file for monitor_torrents Django management command
+
+[Unit]
+Description=Transmission Monitor
+After=transmission-daemon.service
+
+[Service]
+Type=simple
+WorkingDirectory={{ django_site_root }}/site
+ExecStart=/usr/local/bin/pipenv run python manage.py monitor_torrents -v3 --settings project.settings_local
+User=django
+SyslogIdentifier=transmission-monitor
+
+[Install]
+WantedBy=multi-user.target

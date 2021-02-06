@@ -40,6 +40,7 @@ apache_mods_enabled:
   - rewrite.load
   - proxy.load
   - proxy_http.load
+  - proxy_wstunnel.load
   - wsgi.load
   - headers.load
   - reqtimeout.load
@@ -95,9 +96,11 @@ apache_vhosts_ssl:
         python-path={{ django_site_root }}/site
       WSGIProcessGroup django
       WSGIScriptAlias / {{ django_site_root }}/site/project/wsgi.py process-group=django
+
       RewriteEngine on
       RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
       RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
+
       Alias /static/ {{ django_site_root }}/static/
       <Directory "{{ django_site_root }}/static">
         AllowOverride All
@@ -105,8 +108,13 @@ apache_vhosts_ssl:
         Require all granted
         Header set Access-Control-Allow-Origin "*"
       </Directory>
+
       Alias /media/ {{ django_site_root }}/static/media/
       Alias /google{{ google_site_verification_code }}.html {{ django_site_root }}/htdocs/google{{ google_site_verification_code }}.html
+
+      RewriteCond %{HTTP:Upgrade} =websocket [NC]
+      RewriteRule /(.*)           ws://localhost:9876/$1 [P,L]
+
       {{ apache_extra_parameters }}
 
   - servername: 'ci.{{ hostname }}'
