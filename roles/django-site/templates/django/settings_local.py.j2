@@ -138,13 +138,13 @@ COMPRESS_ENABLED = True
 
 ADMIN_SITE_HEADER = "Tak's site admin site thingie"
 
-TORRENT_SEARCH_ENGINES = {
-    'btdb.io': {
-        'url': 'https://btdb.io/search/{query}/{page}/',
-        'default-page': 0,
-        'filters': [{'name': 'div', 'class': 'card-body'}]
-    }
-}
+TORRENT_SEARCH_ENGINES = [
+    ('piratebay.party', {
+        'url': 'https://piratebay.party/search/{query}/{page}/7/0',
+        'default-page': 1,
+        'filters': [{'name': 'table', 'id': 'searchResult'}]
+    })
+]
 for site in [
         'proxybay.zone',
         'thepiratebay.blog',
@@ -157,12 +157,12 @@ for site in [
         'thepiratebay1.top',
         'piratebay1.info',
         ]:
-    TORRENT_SEARCH_ENGINES[site] = {
+    TORRENT_SEARCH_ENGINES.append((site, {
         'url': 'https://' + site + '/search.php?q={query}&p={page}&cat=0',
         'default-page': 1,
         #'filters': [{'name': 'table', 'id': 'searchResult'}]
         'filters': [{'name': 'ol', 'id': 'torrents'}]
-    }
+    }))
 TORRENT_WEBSOCKET_EXTERNAL_PORT = 443
 TORRENT_WEBSOCKET_EXTERNAL_SECURE = True
 
