@@ -115,6 +115,19 @@ apache_vhosts_ssl:
       RewriteCond %{HTTP:Upgrade} =websocket [NC]
       RewriteRule /(.*)           ws://localhost:9876/$1 [P,L]
 
+      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
+      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
+      OIDCClientID id
+      OIDCClientSecret s3cr1t
+      OIDCRedirectURI https://apps.{{ hostname }}/
+      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
+      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
+      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
+      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
+      <Location />
+        AuthType oauth20
+        Require valid-user
+      </Location>
       {{ apache_extra_parameters }}
 
   - servername: 'ci.{{ hostname }}'
@@ -126,11 +139,33 @@ apache_vhosts_ssl:
       LimitRequestFieldSize 32760
       LimitRequestLine 32760
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
-      ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
-      ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
+      Header set Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' {{ allowed_csp_domains | join(' ') }}"
+      ProxyPreserveHost On
       ProxyRequests     Off
       AllowEncodedSlashes NoDecode
-      Header set Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' {{ allowed_csp_domains | join(' ') }}"
+
+      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
+      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
+      OIDCClientID id
+      OIDCClientSecret s3cr1t
+      OIDCRedirectURI https://ci.{{ hostname }}/
+      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
+      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
+      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
+      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
+
+      <Proxy *>
+        AuthType oauth20
+        Require valid-user
+        RequestHeader unset X-Forwarded-User
+        RewriteEngine On
+        RewriteCond %{LA-U:REMOTE_USER} (.+)
+        RewriteRule .* - [E=RU:%1]
+        RequestHeader set X-Forwarded-User %{RU}e
+      </Proxy>
+
+      ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
+      ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
 
   - servername: 'review.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
@@ -139,10 +174,33 @@ apache_vhosts_ssl:
     certificate_chain_file: '/etc/letsencrypt/live/review.{{ hostname }}/fullchain.pem'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
-      Alias /clone-bundles {{ django_site_root }}/htdocs/clone-bundles
-      RewriteEngine on
-      RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
-      RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
+      #Alias /clone-bundles {{ django_site_root }}/htdocs/clone-bundles
+      #RewriteEngine on
+      #RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
+      #RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
+
+      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
+      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
+      OIDCClientID id
+      OIDCClientSecret s3cr1t
+      OIDCRedirectURI https://review.{{ hostname }}/
+      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
+      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
+      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
+      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
+      <Location />
+        AuthType oauth20
+        Require valid-user
+        RequestHeader unset REMOTE_USER
+        RewriteEngine On
+        RewriteCond %{LA-U:REMOTE_USER} (.+)
+        RewriteRule .* - [E=RU:%1]
+        RequestHeader set REMOTE_USER %{RU}e
+      </Location>
+
+      ProxyPreserveHost On
+      ProxyRequests     Off
+      #ProxyVia Off
       AllowEncodedSlashes NoDecode
       ProxyPass / http://{{ groups['gerrit'][0] }}:8081/ nocanon
       ProxyPassReverse / http://{{ groups['gerrit'][0] }}:8081/

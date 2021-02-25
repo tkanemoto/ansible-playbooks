@@ -14,19 +14,24 @@ gerrit_database_db: gerritdb
 gerrit_database_username: 'gerrit'
 # gerrit_database_password: defined in encrypted_vars
 gerrit_sendemail_smtp_server: smtp.mailgun.org
-gerrit_auth_type: OAUTH
+#gerrit_auth_type: OAUTH
+gerrit_auth_type: HTTP
 
 gerrit_extra_config_list:
   - { section: core, option: packedGitOpenFiles, value: 4096 }
   - { section: core, option: packedGitLimit, value: '10m' }
   - { section: core, option: packedGitWindowSize, value: '8k' }
   - { section: container, option: javaOptions, value: '-XX:+UseG1GC -Xmx3g -XX:+UseStringDeduplication' }
-  - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'client-id', value: '932815769348-6d1ijbvtshaeerj648gn0ir5jdncoqbk.apps.googleusercontent.com' }
-  - { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'link-to-existing-openid-accounts', value: 'true' }
-  - { section: 'plugin "gerrit-oauth-provider-github-oauth"', option: 'client-id', value: '915b01ff9294158cb16d' }
+  - { section: gerrit, option: serverId, value: 'ef990535-4474-414b-a9cb-f7c3b97803cc' }
+  #- { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'client-id', value: '932815769348-6d1ijbvtshaeerj648gn0ir5jdncoqbk.apps.googleusercontent.com' }
+  #- { section: 'plugin "gerrit-oauth-provider-google-oauth"', option: 'link-to-existing-openid-accounts', value: 'true' }
+  #- { section: 'plugin "gerrit-oauth-provider-github-oauth"', option: 'client-id', value: '915b01ff9294158cb16d' }
   - { section: auth, option: gitBasicAuthPolicy, value: HTTP }
+  - { section: auth, option: httpHeader, value: REMOTE_USER }
+  - { section: auth, option: loginUrl, value: 'https://tkanemoto.cloudflareaccess.com/' }
+  - { section: auth, option: logoutUrl, value: 'https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/logout?returnTo=https://review.tkanemoto.com/' }
+  - { section: auth, option: registerPageUrl, value: '/' }
   - { section: auth, option: allowRegisterNewEmail, value: 'true' }
-  - { section: oauth, option: allowRegisterNewEmail, value: 'true' }
   - { section: change, option: largeChange, value: 2000 }
   - { section: changeCleanup, option: abandonAfter, value: 1y }
   - { section: changeCleanup, option: startTime, value: '06:00' }
