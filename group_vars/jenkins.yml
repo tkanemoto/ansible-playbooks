@@ -1,5 +1,5 @@
 ---
-jenkins_version: 2.278
+jenkins_version: '2.280'
 jenkins_init_changes: []
   #- option: "JENKINS_ARGS"
   #  value: "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT"
