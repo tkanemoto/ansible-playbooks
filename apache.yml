@@ -19,5 +19,6 @@
       with_items: '{{ django_netrc_entries }}'
 
   roles:
+    - { role: tkanemoto.apache2-mod-oauth2 }
     - { role: django-site }
     - { role: geerlingguy.apache }

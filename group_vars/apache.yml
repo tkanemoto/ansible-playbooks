@@ -46,6 +46,7 @@ apache_mods_enabled:
   - reqtimeout.load
   - ssl.load
   - php7.2.load
+  - oauth2.load
 apache_packages:
   - apache2
   - apache2-utils
@@ -98,8 +99,8 @@ apache_vhosts_ssl:
       WSGIScriptAlias / {{ django_site_root }}/site/project/wsgi.py process-group=django
 
       RewriteEngine on
-      RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
-      RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
+      #RewriteRule ^/review/(.*)$ https://review.%{SERVER_NAME}/$1 [R=301,L]
+      #RewriteRule ^/ci/(.*)$ https://ci.%{SERVER_NAME}/$1 [R=301,L]
 
       Alias /static/ {{ django_site_root }}/static/
       <Directory "{{ django_site_root }}/static">
@@ -115,17 +116,12 @@ apache_vhosts_ssl:
       RewriteCond %{HTTP:Upgrade} =websocket [NC]
       RewriteRule /(.*)           ws://localhost:9876/$1 [P,L]
 
-      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
-      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
-      OIDCClientID id
-      OIDCClientSecret s3cr1t
-      OIDCRedirectURI https://apps.{{ hostname }}/
-      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
-      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
-      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
-      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
       <Location />
-        AuthType oauth20
+        #AuthType oauth20
+        AuthType oauth2
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2AcceptTokenIn cookie name=CF_Authorization
+        OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         Require valid-user
       </Location>
       {{ apache_extra_parameters }}
@@ -143,27 +139,19 @@ apache_vhosts_ssl:
       ProxyPreserveHost On
       ProxyRequests     Off
       AllowEncodedSlashes NoDecode
-
-      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
-      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
-      OIDCClientID id
-      OIDCClientSecret s3cr1t
-      OIDCRedirectURI https://ci.{{ hostname }}/
-      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
-      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
-      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
-      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
-
       <Proxy *>
-        AuthType oauth20
+        #AuthType oauth20
+        AuthType oauth2
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2AcceptTokenIn cookie name=CF_Authorization
+        OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         Require valid-user
         RequestHeader unset X-Forwarded-User
         RewriteEngine On
         RewriteCond %{LA-U:REMOTE_USER} (.+)
-        RewriteRule .* - [E=RU:%1]
-        RequestHeader set X-Forwarded-User %{RU}e
+        RewriteRule .* - [E=RU:%1,NS]
+        RequestHeader set X-Forwarded-User cf-access-%{RU}e
       </Proxy>
-
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
 
@@ -178,24 +166,18 @@ apache_vhosts_ssl:
       #RewriteEngine on
       #RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
       #RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
-
-      OIDCProviderIssuer https://tkanemoto.cloudflareaccess.com/
-      OIDCProviderAuthorizationEndpoint https://tkanemoto.cloudflareaccess.com/
-      OIDCClientID id
-      OIDCClientSecret s3cr1t
-      OIDCRedirectURI https://review.{{ hostname }}/
-      OIDCCryptoPassphrase {{ oidc_crypto_passphrase }}
-      OIDCOAuthVerifyJwksUri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs
-      OIDCOAuthRemoteUserClaim sub ^(.*)$ cf-access-$1
-      OIDCOAuthAcceptTokenAs cookie:CF_Authorization
       <Location />
-        AuthType oauth20
+        #AuthType oauth20
+        AuthType oauth2
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2AcceptTokenIn cookie name=CF_Authorization
+        OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         Require valid-user
         RequestHeader unset REMOTE_USER
         RewriteEngine On
         RewriteCond %{LA-U:REMOTE_USER} (.+)
-        RewriteRule .* - [E=RU:%1]
-        RequestHeader set REMOTE_USER %{RU}e
+        RewriteRule .* - [E=RU:%1,NS]
+        RequestHeader set REMOTE_USER cf-access-%{RU}e
       </Location>
 
       ProxyPreserveHost On
