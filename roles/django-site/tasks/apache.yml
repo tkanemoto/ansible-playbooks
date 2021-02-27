@@ -18,9 +18,31 @@
 - include_vars: roles/geerlingguy.apache/vars/apache-24.yml
   when: "apache_version.split('.')[1] == '4'"
 
+- name: deploy private keys
+  copy:
+    content: '{{ item.private }}'
+    dest: "/etc/ssl/private/{{ item.name }}.key"
+  with_items: "{{ apache_ssl_certificates }}"
+  notify: restart apache
+
+- name: deploy certificates
+  copy:
+    content: '{{ item.public }}'
+    dest: "/etc/ssl/certs/{{ item.name }}.pem"
+  with_items: "{{ apache_ssl_certificates }}"
+  notify: restart apache
+
+- name: deploy intermediate certificates
+  copy:
+    content: '{{ item.intermediate }}'
+    dest: "/etc/ssl/certs/{{ item.name }}-intermediate.pem"
+  with_items: "{{ apache_ssl_certificates }}"
+  when: "'intermediate' in item"
+  notify: restart apache
+
 - name: Check whether certificates defined in vhosts exist.
   stat: 'path={{ item.certificate_file }}'
-  register: apache_ssl_certificates
+  register: apache_ssl_certificate_files
   with_items: '{{ apache_vhosts_ssl }}'
 
 - name: Add apache vhost configuration files - HTTPS

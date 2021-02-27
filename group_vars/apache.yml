@@ -81,9 +81,8 @@ apache_vhosts:
 apache_vhosts_ssl:
   - servername: 'apps.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/apps.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/apps.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/apps.{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       RequestReadTimeout header=90,MinRate=500 body=90,MinRate=500
@@ -145,9 +144,8 @@ apache_vhosts_ssl:
 
   - servername: 'ci.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/ci.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/ci.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/ci.{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       LimitRequestFieldSize 32760
       LimitRequestLine 32760
@@ -251,9 +249,8 @@ apache_vhosts_ssl:
 
   - servername: 'review.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/review.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/review.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/review.{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       #Alias /clone-bundles {{ django_site_root }}/htdocs/clone-bundles
@@ -308,9 +305,8 @@ apache_vhosts_ssl:
 
   - servername: 'source.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/source.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/source.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/source.{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       ProxyPass /xref http://127.0.0.1:8080/xref nocanon
@@ -325,9 +321,8 @@ apache_vhosts_ssl:
 
   - servername: 'updates.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
-    certificate_file: '/etc/letsencrypt/live/updates.{{ hostname }}/cert.pem'
-    certificate_key_file: '/etc/letsencrypt/live/updates.{{ hostname }}/privkey.pem'
-    certificate_chain_file: '/etc/letsencrypt/live/updates.{{ hostname }}/fullchain.pem'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
       {{ updates_apache_config }}

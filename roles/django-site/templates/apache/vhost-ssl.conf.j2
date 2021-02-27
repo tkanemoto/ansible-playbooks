@@ -17,7 +17,7 @@
   SSLCompression off
 {% endif %}
 
-{% if apache_ssl_certificates.results[item.0].stat.exists %}
+{% if apache_ssl_certificate_files.results[item.0].stat.exists %}
   SSLCertificateFile {{ item.1.certificate_file }}
   SSLCertificateKeyFile {{ item.1.certificate_key_file }}
 {% if item.1.certificate_chain_file is defined %}
