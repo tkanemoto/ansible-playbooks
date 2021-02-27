@@ -30,18 +30,18 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 FILEBROWSER_VERSIONS_BASEDIR = '_versions'
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.RemoteUserBackend',
+    'base.backends.CloudFlareAccessUserBackend',
 )
 
 MIDDLEWARE += [
     'django.contrib.auth.middleware.RemoteUserMiddleware',
 ]
 LOGIN_URL = 'https://tkanemoto.cloudflareaccess.com/'
-
-TEMPLATES[0]['OPTIONS']['context_processors'] += [
-  'social_django.context_processors.backends',
-  'social_django.context_processors.login_redirect',
+CLOUDFLARE_ACCESS_BACKEND_SUPERUSER_EMAILS = [
+    'me@tkanemoto.com',
+    'tak.kanemoto@gmail.com',
 ]
+CLOUDFLARE_ACCESS_BACKEND_IDENTITY_URL = 'https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/get-identity'
 
 LOGGING = {
     'version': 1,

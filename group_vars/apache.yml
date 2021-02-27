@@ -117,12 +117,29 @@ apache_vhosts_ssl:
       RewriteRule /(.*)           ws://localhost:9876/$1 [P,L]
 
       <Location />
-        #AuthType oauth20
         AuthType oauth2
         OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
-        Require valid-user
+        <RequireAll>
+          <RequireAny>
+            Require ip 173.245.48.0/20
+            Require ip 103.21.244.0/22
+            Require ip 103.22.200.0/22
+            Require ip 103.31.4.0/22
+            Require ip 141.101.64.0/18
+            Require ip 108.162.192.0/18
+            Require ip 190.93.240.0/20
+            Require ip 188.114.96.0/20
+            Require ip 197.234.240.0/22
+            Require ip 198.41.128.0/17
+            Require ip 162.158.0.0/15
+            Require ip 104.16.0.0/12
+            Require ip 172.64.0.0/13
+            Require ip 131.0.72.0/22
+          </RequireAny>
+          Require valid-user
+        </RequireAll>
       </Location>
       {{ apache_extra_parameters }}
 
@@ -139,19 +156,96 @@ apache_vhosts_ssl:
       ProxyPreserveHost On
       ProxyRequests     Off
       AllowEncodedSlashes NoDecode
+
+      <Location ~ "/computer/.*/.*.jnlp">
+        <RequireAny>
+          Require ip 173.245.48.0/20
+          Require ip 103.21.244.0/22
+          Require ip 103.22.200.0/22
+          Require ip 103.31.4.0/22
+          Require ip 141.101.64.0/18
+          Require ip 108.162.192.0/18
+          Require ip 190.93.240.0/20
+          Require ip 188.114.96.0/20
+          Require ip 197.234.240.0/22
+          Require ip 198.41.128.0/17
+          Require ip 162.158.0.0/15
+          Require ip 104.16.0.0/12
+          Require ip 172.64.0.0/13
+          Require ip 131.0.72.0/22
+        </RequireAny>
+      </Location>
+      <Location /wsagents/>
+        RewriteEngine on
+        RewriteCond %{HTTP:Upgrade} =websocket [NC]
+        RewriteRule .* ws://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/%{REQUEST_URI} [P,L]
+        <RequireAny>
+          Require ip 173.245.48.0/20
+          Require ip 103.21.244.0/22
+          Require ip 103.22.200.0/22
+          Require ip 103.31.4.0/22
+          Require ip 141.101.64.0/18
+          Require ip 108.162.192.0/18
+          Require ip 190.93.240.0/20
+          Require ip 188.114.96.0/20
+          Require ip 197.234.240.0/22
+          Require ip 198.41.128.0/17
+          Require ip 162.158.0.0/15
+          Require ip 104.16.0.0/12
+          Require ip 172.64.0.0/13
+          Require ip 131.0.72.0/22
+        </RequireAny>
+      </Location>
+      <Location ~ "/(tcpSlaveAgentListener|jnlpJars|github-webhook)/">
+        <RequireAny>
+          Require ip 173.245.48.0/20
+          Require ip 103.21.244.0/22
+          Require ip 103.22.200.0/22
+          Require ip 103.31.4.0/22
+          Require ip 141.101.64.0/18
+          Require ip 108.162.192.0/18
+          Require ip 190.93.240.0/20
+          Require ip 188.114.96.0/20
+          Require ip 197.234.240.0/22
+          Require ip 198.41.128.0/17
+          Require ip 162.158.0.0/15
+          Require ip 104.16.0.0/12
+          Require ip 172.64.0.0/13
+          Require ip 131.0.72.0/22
+        </RequireAny>
+      </Location>
+
       <Proxy *>
-        #AuthType oauth20
         AuthType oauth2
         OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
-        Require valid-user
         RequestHeader unset X-Forwarded-User
         RewriteEngine On
         RewriteCond %{LA-U:REMOTE_USER} (.+)
         RewriteRule .* - [E=RU:%1,NS]
         RequestHeader set X-Forwarded-User cf-access-%{RU}e
+        <RequireAll>
+          <RequireAny>
+            Require ip 173.245.48.0/20
+            Require ip 103.21.244.0/22
+            Require ip 103.22.200.0/22
+            Require ip 103.31.4.0/22
+            Require ip 141.101.64.0/18
+            Require ip 108.162.192.0/18
+            Require ip 190.93.240.0/20
+            Require ip 188.114.96.0/20
+            Require ip 197.234.240.0/22
+            Require ip 198.41.128.0/17
+            Require ip 162.158.0.0/15
+            Require ip 104.16.0.0/12
+            Require ip 172.64.0.0/13
+            Require ip 131.0.72.0/22
+          </RequireAny>
+          Require valid-user
+        </RequireAll>
       </Proxy>
+
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
       ProxyPassReverse / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/
 
@@ -167,17 +261,34 @@ apache_vhosts_ssl:
       #RewriteRule ^/a/(.*)\.git/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
       #RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
       <Location />
-        #AuthType oauth20
         AuthType oauth2
         OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
-        Require valid-user
         RequestHeader unset REMOTE_USER
         RewriteEngine On
         RewriteCond %{LA-U:REMOTE_USER} (.+)
         RewriteRule .* - [E=RU:%1,NS]
         RequestHeader set REMOTE_USER cf-access-%{RU}e
+        <RequireAll>
+          <RequireAny>
+            Require ip 173.245.48.0/20
+            Require ip 103.21.244.0/22
+            Require ip 103.22.200.0/22
+            Require ip 103.31.4.0/22
+            Require ip 141.101.64.0/18
+            Require ip 108.162.192.0/18
+            Require ip 190.93.240.0/20
+            Require ip 188.114.96.0/20
+            Require ip 197.234.240.0/22
+            Require ip 198.41.128.0/17
+            Require ip 162.158.0.0/15
+            Require ip 104.16.0.0/12
+            Require ip 172.64.0.0/13
+            Require ip 131.0.72.0/22
+          </RequireAny>
+          Require valid-user
+        </RequireAll>
       </Location>
 
       ProxyPreserveHost On
