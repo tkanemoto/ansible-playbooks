@@ -117,7 +117,7 @@ apache_vhosts_ssl:
 
       <Location />
         AuthType oauth2
-        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=90000
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         <RequireAll>
@@ -215,7 +215,7 @@ apache_vhosts_ssl:
 
       <Proxy *>
         AuthType oauth2
-        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=90000
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         RequestHeader unset X-Forwarded-User
@@ -242,6 +242,7 @@ apache_vhosts_ssl:
           </RequireAny>
           Require valid-user
         </RequireAll>
+        ErrorDocument 401 "<html><meta http-equiv=\"refresh\" content=\"0;url=https://tkanemoto.cloudflareaccess.com/\"></html>"
       </Proxy>
 
       ProxyPass / http://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/ nocanon
@@ -259,7 +260,7 @@ apache_vhosts_ssl:
       #RewriteRule ^/a/(.*)/clone.bundle$ https://{{ hostname }}/static/public/clone-bundles/$1.git/clone.bundle [R=301,L]
       <Location />
         AuthType oauth2
-        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=43200
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=90000
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         RequestHeader unset REMOTE_USER
