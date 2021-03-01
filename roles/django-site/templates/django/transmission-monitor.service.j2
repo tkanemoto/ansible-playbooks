@@ -7,7 +7,7 @@ After=transmission-daemon.service
 [Service]
 Type=simple
 WorkingDirectory={{ django_site_root }}/site
-ExecStart=/usr/local/bin/pipenv run python manage.py monitor_torrents -v3 --settings project.settings_local
+ExecStart=/usr/local/bin/pipenv run python3 manage.py monitor_torrents -v3 --settings project.settings_local
 User=django
 SyslogIdentifier=transmission-monitor
 
