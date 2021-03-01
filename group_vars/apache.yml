@@ -155,7 +155,7 @@ apache_vhosts_ssl:
       ProxyRequests     Off
       AllowEncodedSlashes NoDecode
 
-      <Location ~ "/computer/.*/.*.jnlp">
+      <Location ~ "^/computer/.*/.*.jnlp">
         <RequireAny>
           Require ip 173.245.48.0/20
           Require ip 103.21.244.0/22
@@ -194,7 +194,7 @@ apache_vhosts_ssl:
           Require ip 131.0.72.0/22
         </RequireAny>
       </Location>
-      <Location ~ "/(tcpSlaveAgentListener|jnlpJars|github-webhook)/">
+      <Location ~ "^/(tcpSlaveAgentListener|jnlpJars|github-webhook)/">
         <RequireAny>
           Require ip 173.245.48.0/20
           Require ip 103.21.244.0/22
