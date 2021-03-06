@@ -104,7 +104,7 @@ apache_vhosts_ssl:
       Alias /static/ {{ django_site_root }}/static/
       <Directory "{{ django_site_root }}/static">
         AllowOverride All
-        Options +Indexes +FollowSymLinks
+        Options -Indexes +FollowSymLinks
         Require all granted
         Header set Access-Control-Allow-Origin "*"
       </Directory>
