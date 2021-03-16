@@ -9,4 +9,4 @@
     - { role: tkanemoto.transmission-rss }
     - { role: geerlingguy.nodejs }
     - { role: tkanemoto.nodejs-systemd }
-    - { role: willshersystems.znc }
+    - { role: willshersystems.ansible-znc }
