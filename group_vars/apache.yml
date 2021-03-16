@@ -39,14 +39,16 @@ cloudflare_ips:
 znc_port: 8667
 znc_datadir: /var/lib/znc
 znc_service: true
-znc_ssl: false
-znc_system_modules: webadmin
+znc_ssl: true
+znc_system_modules:
+  - webadmin
 znc_user_name: admin
 znc_user_password: 'sha256#6c7ca980f175a5b5c0c02f3b26e77637d9c50b7ca7b2181eb96acf766fe40c27#xJ/eJ_;!SKR;4)z3e)P5#'
 znc_user_nick: PenguinNomad
 znc_user_altnick: T4K
 znc_user_realname: 'Takeshi Kanemoto'
-znc_user_module: chansaver controlpanel
+#znc_force_config_refresh: true
+#znc_user_module: chansaver controlpanel
 
 apache_global_vhost_settings: |
   DirectoryIndex index.php index.html
@@ -138,7 +140,9 @@ apache_vhosts_ssl:
       </Directory>
       <Location ~ "^/(media/|static/|google{{ google_site_verification_code }}\.html)">
         <RequireAny>
-          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+          {% for ip in cloudflare_ips %}
+            Require ip {{ ip }}
+          {% endfor %}
         </RequireAny>
         Satisfy Any
       </Location>
@@ -156,7 +160,9 @@ apache_vhosts_ssl:
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         <RequireAll>
           <RequireAny>
-            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+            {% for ip in cloudflare_ips %}
+              Require ip {{ ip }}
+            {% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -178,7 +184,9 @@ apache_vhosts_ssl:
 
       <Location ~ "^/computer/.*/.*.jnlp">
         <RequireAny>
-          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+          {% for ip in cloudflare_ips %}
+            Require ip {{ ip }}
+          {% endfor %}
         </RequireAny>
       </Location>
       <Location /wsagents/>
@@ -186,12 +194,16 @@ apache_vhosts_ssl:
         RewriteCond %{HTTP:Upgrade} =websocket [NC]
         RewriteRule .* ws://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/%{REQUEST_URI} [P,L]
         <RequireAny>
-          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+          {% for ip in cloudflare_ips %}
+            Require ip {{ ip }}
+          {% endfor %}
         </RequireAny>
       </Location>
       <Location ~ "^/(tcpSlaveAgentListener|jnlpJars|github-webhook)/">
         <RequireAny>
-          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+          {% for ip in cloudflare_ips %}
+            Require ip {{ ip }}
+          {% endfor %}
         </RequireAny>
       </Location>
 
@@ -207,7 +219,9 @@ apache_vhosts_ssl:
         RequestHeader set X-Forwarded-User cf-access-%{RU}e
         <RequireAll>
           <RequireAny>
-            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+            {% for ip in cloudflare_ips %}
+              Require ip {{ ip }}
+            {% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -239,7 +253,9 @@ apache_vhosts_ssl:
         RequestHeader set REMOTE_USER cf-access-%{RU}e
         <RequireAll>
           <RequireAny>
-            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+            {% for ip in cloudflare_ips %}
+              Require ip {{ ip }}
+            {% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -258,18 +274,24 @@ apache_vhosts_ssl:
     certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
     extra_parameters: |
       Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+      SSLProxyEngine on
+      SSLProxyVerify none
+      SSLProxyCheckPeerCN off
+      SSLProxyCheckPeerName off
       ProxyPreserveHost On
-      ProxyRequests     Off
-      AllowEncodedSlashes NoDecode
-      ProxyPass / http://127.0.0.1:{{ znc_port }}/ nocanon
-      ProxyPassReverse / http://127.0.0.1:{{ znc_port }}/
+      ProxyRequests     On
+      #AllowEncodedSlashes NoDecode
+      ProxyPass / https://127.0.0.1:{{ znc_port }}/
+      ProxyPassReverse / https://127.0.0.1:{{ znc_port }}/
       <Location />
         AuthType oauth2
         OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=90000
         OAuth2AcceptTokenIn cookie name=CF_Authorization
         <RequireAll>
           <RequireAny>
-            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+            {% for ip in cloudflare_ips %}
+              Require ip {{ ip }}
+            {% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
