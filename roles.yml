@@ -1,3 +1,6 @@
+- src: https://github.com/willshersystems/ansible-znc.git
+  name: willshersystems.ansible-znc
+
 - src: https://github.com/tkanemoto/ansible-apache2-mod-oauth2.git
   name: tkanemoto.apache2-mod-oauth2
 

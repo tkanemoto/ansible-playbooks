@@ -20,6 +20,34 @@ allowed_csp_domains:
   - 'https://www.linkedin.com'
   - 'https://www.henrisalonen.com'
 
+cloudflare_ips:
+  - '173.245.48.0/20'
+  - '103.21.244.0/22'
+  - '103.22.200.0/22'
+  - '103.31.4.0/22'
+  - '141.101.64.0/18'
+  - '108.162.192.0/18'
+  - '190.93.240.0/20'
+  - '188.114.96.0/20'
+  - '197.234.240.0/22'
+  - '198.41.128.0/17'
+  - '162.158.0.0/15'
+  - '104.16.0.0/12'
+  - '172.64.0.0/13'
+  - '131.0.72.0/22'
+
+znc_port: 8667
+znc_datadir: /var/lib/znc
+znc_service: true
+znc_ssl: false
+znc_system_modules: webadmin
+znc_user_name: admin
+znc_user_password: 'sha256#6c7ca980f175a5b5c0c02f3b26e77637d9c50b7ca7b2181eb96acf766fe40c27#xJ/eJ_;!SKR;4)z3e)P5#'
+znc_user_nick: PenguinNomad
+znc_user_altnick: T4K
+znc_user_realname: 'Takeshi Kanemoto'
+znc_user_module: chansaver controlpanel
+
 apache_global_vhost_settings: |
   DirectoryIndex index.php index.html
   LogLevel warn
@@ -110,20 +138,7 @@ apache_vhosts_ssl:
       </Directory>
       <Location ~ "^/(media/|static/|google{{ google_site_verification_code }}\.html)">
         <RequireAny>
-          Require ip 173.245.48.0/20
-          Require ip 103.21.244.0/22
-          Require ip 103.22.200.0/22
-          Require ip 103.31.4.0/22
-          Require ip 141.101.64.0/18
-          Require ip 108.162.192.0/18
-          Require ip 190.93.240.0/20
-          Require ip 188.114.96.0/20
-          Require ip 197.234.240.0/22
-          Require ip 198.41.128.0/17
-          Require ip 162.158.0.0/15
-          Require ip 104.16.0.0/12
-          Require ip 172.64.0.0/13
-          Require ip 131.0.72.0/22
+          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
         </RequireAny>
         Satisfy Any
       </Location>
@@ -141,20 +156,7 @@ apache_vhosts_ssl:
         OAuth2TargetPass prefix=cf-access-claim-&authn_header=REMOTE_USER
         <RequireAll>
           <RequireAny>
-            Require ip 173.245.48.0/20
-            Require ip 103.21.244.0/22
-            Require ip 103.22.200.0/22
-            Require ip 103.31.4.0/22
-            Require ip 141.101.64.0/18
-            Require ip 108.162.192.0/18
-            Require ip 190.93.240.0/20
-            Require ip 188.114.96.0/20
-            Require ip 197.234.240.0/22
-            Require ip 198.41.128.0/17
-            Require ip 162.158.0.0/15
-            Require ip 104.16.0.0/12
-            Require ip 172.64.0.0/13
-            Require ip 131.0.72.0/22
+            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -176,20 +178,7 @@ apache_vhosts_ssl:
 
       <Location ~ "^/computer/.*/.*.jnlp">
         <RequireAny>
-          Require ip 173.245.48.0/20
-          Require ip 103.21.244.0/22
-          Require ip 103.22.200.0/22
-          Require ip 103.31.4.0/22
-          Require ip 141.101.64.0/18
-          Require ip 108.162.192.0/18
-          Require ip 190.93.240.0/20
-          Require ip 188.114.96.0/20
-          Require ip 197.234.240.0/22
-          Require ip 198.41.128.0/17
-          Require ip 162.158.0.0/15
-          Require ip 104.16.0.0/12
-          Require ip 172.64.0.0/13
-          Require ip 131.0.72.0/22
+          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
         </RequireAny>
       </Location>
       <Location /wsagents/>
@@ -197,38 +186,12 @@ apache_vhosts_ssl:
         RewriteCond %{HTTP:Upgrade} =websocket [NC]
         RewriteRule .* ws://{{ groups['jenkins'][0] }}:{{ jenkins_http_port }}/%{REQUEST_URI} [P,L]
         <RequireAny>
-          Require ip 173.245.48.0/20
-          Require ip 103.21.244.0/22
-          Require ip 103.22.200.0/22
-          Require ip 103.31.4.0/22
-          Require ip 141.101.64.0/18
-          Require ip 108.162.192.0/18
-          Require ip 190.93.240.0/20
-          Require ip 188.114.96.0/20
-          Require ip 197.234.240.0/22
-          Require ip 198.41.128.0/17
-          Require ip 162.158.0.0/15
-          Require ip 104.16.0.0/12
-          Require ip 172.64.0.0/13
-          Require ip 131.0.72.0/22
+          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
         </RequireAny>
       </Location>
       <Location ~ "^/(tcpSlaveAgentListener|jnlpJars|github-webhook)/">
         <RequireAny>
-          Require ip 173.245.48.0/20
-          Require ip 103.21.244.0/22
-          Require ip 103.22.200.0/22
-          Require ip 103.31.4.0/22
-          Require ip 141.101.64.0/18
-          Require ip 108.162.192.0/18
-          Require ip 190.93.240.0/20
-          Require ip 188.114.96.0/20
-          Require ip 197.234.240.0/22
-          Require ip 198.41.128.0/17
-          Require ip 162.158.0.0/15
-          Require ip 104.16.0.0/12
-          Require ip 172.64.0.0/13
-          Require ip 131.0.72.0/22
+          {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
         </RequireAny>
       </Location>
 
@@ -244,20 +207,7 @@ apache_vhosts_ssl:
         RequestHeader set X-Forwarded-User cf-access-%{RU}e
         <RequireAll>
           <RequireAny>
-            Require ip 173.245.48.0/20
-            Require ip 103.21.244.0/22
-            Require ip 103.22.200.0/22
-            Require ip 103.31.4.0/22
-            Require ip 141.101.64.0/18
-            Require ip 108.162.192.0/18
-            Require ip 190.93.240.0/20
-            Require ip 188.114.96.0/20
-            Require ip 197.234.240.0/22
-            Require ip 198.41.128.0/17
-            Require ip 162.158.0.0/15
-            Require ip 104.16.0.0/12
-            Require ip 172.64.0.0/13
-            Require ip 131.0.72.0/22
+            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -289,20 +239,7 @@ apache_vhosts_ssl:
         RequestHeader set REMOTE_USER cf-access-%{RU}e
         <RequireAll>
           <RequireAny>
-            Require ip 173.245.48.0/20
-            Require ip 103.21.244.0/22
-            Require ip 103.22.200.0/22
-            Require ip 103.31.4.0/22
-            Require ip 141.101.64.0/18
-            Require ip 108.162.192.0/18
-            Require ip 190.93.240.0/20
-            Require ip 188.114.96.0/20
-            Require ip 197.234.240.0/22
-            Require ip 198.41.128.0/17
-            Require ip 162.158.0.0/15
-            Require ip 104.16.0.0/12
-            Require ip 172.64.0.0/13
-            Require ip 131.0.72.0/22
+            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
           </RequireAny>
           Require valid-user
         </RequireAll>
@@ -314,6 +251,29 @@ apache_vhosts_ssl:
       AllowEncodedSlashes NoDecode
       ProxyPass / http://{{ groups['gerrit'][0] }}:8081/ nocanon
       ProxyPassReverse / http://{{ groups['gerrit'][0] }}:8081/
+
+  - servername: 'irc.{{ hostname }}'
+    documentroot: '{{ znc_datadir }}'
+    certificate_file: '/etc/ssl/certs/{{ hostname }}.pem'
+    certificate_key_file: '/etc/ssl/private/{{ hostname }}.key'
+    extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+      ProxyPreserveHost On
+      ProxyRequests     Off
+      AllowEncodedSlashes NoDecode
+      ProxyPass / http://127.0.0.1:{{ znc_port }}/ nocanon
+      ProxyPassReverse / http://127.0.0.1:{{ znc_port }}/
+      <Location />
+        AuthType oauth2
+        OAuth2TokenVerify jwks_uri https://tkanemoto.cloudflareaccess.com/cdn-cgi/access/certs jwks_uri.ssl_verify=false&verify.iat.slack_before=90000
+        OAuth2AcceptTokenIn cookie name=CF_Authorization
+        <RequireAll>
+          <RequireAny>
+            {% for ip in cloudflare_ips %}Require ip {{ ip }}{% endfor %}
+          </RequireAny>
+          Require valid-user
+        </RequireAll>
+      </Location>
 
   # - servername: 'files.{{ hostname }}'
   #   documentroot: '/var/www/owncloud'
