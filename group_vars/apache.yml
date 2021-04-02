@@ -304,6 +304,13 @@ apache_vhosts_ssl:
   #   certificate_chain_file: '/etc/letsencrypt/live/files.{{ hostname }}/fullchain.pem'
   #   extra_parameters: |
   #     Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+  - servername: 'remoting.{{ hostname }}'
+    documentroot: '/var/www/html'
+    certificate_file: '/etc/letsencrypt/live/remoting.{{ hostname }}/cert.pem'
+    certificate_key_file: '/etc/letsencrypt/live/remoting.{{ hostname }}/privkey.pem'
+    certificate_chain_file: '/etc/letsencrypt/live/remoting.{{ hostname }}/fullchain.pem'
+    extra_parameters: |
+      Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
 
   - servername: 'source.{{ hostname }}'
     documentroot: '{{ django_site_root }}/htdocs'
