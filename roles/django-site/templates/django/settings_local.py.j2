@@ -106,10 +106,20 @@ COMPRESS_ENABLED = True
 ADMIN_SITE_HEADER = "Tak's site admin site thingie"
 
 TORRENT_SEARCH_ENGINES = [
+    ('bt4g', {
+        'url': 'https://bt4g.org/search/{query}/byseeders/{page}',
+        'default-page': 1,
+        'filters': [{'name': 'main'}]
+    }),
     ('piratebay.party', {
         'url': 'https://piratebay.party/search/{query}/{page}/7/0',
         'default-page': 1,
         'filters': [{'name': 'table', 'id': 'searchResult'}]
+    }),
+    ('btdb', {
+        'url': 'https://btdb.eu/search/{query}/{page}/',
+        'default-page': 0,
+        'filters': [{'name': 'div', 'class_': 'card-body'}]
     })
 ]
 for site in [
