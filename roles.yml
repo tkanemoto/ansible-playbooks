@@ -1,3 +1,6 @@
+- src: https://github.com/tkanemoto/ansible-role-factorio-server.git
+  name: tkanemoto.factorio-server
+
 - src: https://github.com/willshersystems/ansible-znc.git
   name: willshersystems.ansible-znc
 

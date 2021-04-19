@@ -10,3 +10,4 @@
     - { role: geerlingguy.nodejs }
     - { role: tkanemoto.nodejs-systemd }
     - { role: willshersystems.ansible-znc }
+    - { role: tkanemoto.factorio-server }
